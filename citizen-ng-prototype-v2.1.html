@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Citizen NG v2 — by Dignity</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ng-green:#008751; --ng-green-d:#005c37; --ng-green-l:#00b368; --ng-green-f:rgba(0,135,81,0.1);
+  --gold:#D4A017; --gold-l:#F5C842; --gold-f:rgba(212,160,23,0.1);
+  --ink:#0D1117; --ink2:#1A2332; --ink3:#243040;
+  --s1:#131C27; --s2:#1C2A3A; --s3:#243347; --s4:#2C3E54;
+  --b1:rgba(255,255,255,0.07); --b2:rgba(255,255,255,0.13); --b3:rgba(255,255,255,0.2);
+  --t1:#F0F4F8; --t2:#9BADC0; --t3:#5A7085; --t4:#364D63;
+  --red:#E53E3E; --red-f:rgba(229,62,62,0.1);
+  --orange:#ED8936; --orange-f:rgba(237,137,54,0.1);
+  --blue:#4299E1; --blue-f:rgba(66,153,225,0.1);
+  --purple:#9F7AEA; --purple-f:rgba(159,122,234,0.1);
+  --fd:'Playfair Display',serif; --fb:'DM Sans',sans-serif; --fm:'DM Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#060C14;font-family:var(--fb);color:var(--t1);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:20px;gap:40px}
+
+/* ── PHONE ─────────────────────────────────── */
+.phone-wrap{flex-shrink:0;position:sticky;top:20px}
+.phone{width:375px;height:780px;background:var(--ink);border-radius:48px;border:2px solid rgba(255,255,255,0.1);box-shadow:0 0 0 6px #060C14,0 0 0 8px rgba(255,255,255,0.04),0 50px 100px rgba(0,0,0,0.9),0 0 80px rgba(0,135,81,0.06);overflow:hidden;position:relative;display:flex;flex-direction:column}
+.sbar{display:flex;justify-content:space-between;align-items:center;padding:14px 24px 0;flex-shrink:0}
+.sbar-time{font-family:var(--fm);font-size:13px;color:var(--t1);font-weight:500}
+.sbar-icons{display:flex;gap:5px;align-items:center}
+.screens{flex:1;position:relative;overflow:hidden}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;opacity:0;pointer-events:none;transform:translateX(28px);transition:opacity .3s cubic-bezier(.4,0,.2,1),transform .3s cubic-bezier(.4,0,.2,1)}
+.screen::-webkit-scrollbar{display:none}
+.screen.active{opacity:1;pointer-events:all;transform:translateX(0)}
+.screen.exit{opacity:0;transform:translateX(-28px)}
+
+/* ── BOTTOM NAV ─────────────────────────────── */
+.bnav{flex-shrink:0;display:flex;background:rgba(13,17,23,0.97);border-top:1px solid var(--b1);padding:8px 0 20px;z-index:50;backdrop-filter:blur(20px)}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:5px 0;transition:all .2s;border:none;background:none;color:var(--t4)}
+.ni.active{color:var(--ng-green-l)}
+.ni svg{width:21px;height:21px;stroke-width:1.8}
+.ni-label{font-size:10px;font-weight:500;letter-spacing:.02em}
+.ni-dot{width:3px;height:3px;border-radius:50%;background:var(--ng-green-l);margin-top:1px;opacity:0;transition:opacity .2s}
+.ni.active .ni-dot{opacity:1}
+
+/* ── SIDEBAR ─────────────────────────────────── */
+.sidebar{flex:1;min-width:0;max-width:480px;padding-top:4px}
+.sb-title{font-family:var(--fd);font-size:26px;margin-bottom:5px;line-height:1.2}
+.sb-sub{font-size:13px;color:var(--t2);margin-bottom:4px;line-height:1.6}
+.sb-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:var(--ng-green-f);border:1px solid rgba(0,135,81,0.3);border-radius:20px;font-size:11px;color:var(--ng-green-l);font-weight:500;margin-bottom:20px}
+.snav{display:flex;flex-direction:column;gap:6px}
+.sbtn{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--s1);border:1px solid var(--b1);border-radius:12px;cursor:pointer;transition:all .2s;color:var(--t2);font-family:var(--fb);font-size:13px;text-align:left;width:100%}
+.sbtn:hover{background:var(--s2);border-color:var(--b2);color:var(--t1)}
+.sbtn.active{background:var(--ng-green-f);border-color:var(--ng-green);color:var(--ng-green-l)}
+.sbtn-num{width:24px;height:24px;border-radius:7px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:10px;flex-shrink:0}
+.sbtn.active .sbtn-num{background:var(--ng-green);color:#fff}
+.sbtn-text{flex:1}
+.sbtn-label{font-weight:500}
+.sbtn-desc{font-size:11px;color:var(--t3);margin-top:1px}
+.sbtn.active .sbtn-desc{color:rgba(0,179,104,.6)}
+.sbtn-new{font-size:9px;padding:1px 6px;background:var(--gold-f);border:1px solid rgba(212,160,23,.3);border-radius:8px;color:var(--gold-l);font-weight:600;letter-spacing:.05em}
+
+/* ── SHARED COMPONENTS ──────────────────────── */
+.btn-p{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px;background:var(--ng-green);color:#fff;border:none;border-radius:14px;font-family:var(--fb);font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;margin-bottom:10px}
+.btn-p:hover{background:var(--ng-green-l);transform:translateY(-1px)}
+.btn-s{display:flex;align-items:center;justify-content:center;width:100%;padding:13px;background:transparent;color:var(--t2);border:1px solid var(--b2);border-radius:14px;font-family:var(--fb);font-size:14px;cursor:pointer;transition:all .2s}
+.btn-s:hover{background:var(--s1);color:var(--t1)}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:600}
+.pill-g{background:rgba(0,135,81,.15);color:var(--ng-green-l)}
+.pill-o{background:var(--orange-f);color:var(--orange)}
+.pill-r{background:var(--red-f);color:var(--red)}
+.pill-b{background:var(--blue-f);color:var(--blue)}
+.pill-p{background:var(--purple-f);color:var(--purple)}
+.pill-gold{background:var(--gold-f);color:var(--gold-l)}
+.sec-hd{display:flex;justify-content:space-between;align-items:center;padding:0 20px;margin-bottom:10px}
+.sec-title{font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.08em;text-transform:uppercase}
+.sec-link{font-size:12px;color:var(--ng-green-l);cursor:pointer;font-weight:500}
+.card{background:var(--s1);border:1px solid var(--b1);border-radius:16px;overflow:hidden}
+.divider{height:1px;background:var(--b1);margin:0}
+.screen-header{padding:18px 20px 12px}
+.screen-title{font-family:var(--fd);font-size:24px;color:var(--t1);margin-bottom:3px}
+.screen-sub{font-size:13px;color:var(--t2);line-height:1.5}
+.fi{display:block;font-size:12px;font-weight:500;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px}
+.finput{width:100%;padding:12px 14px;background:var(--s2);border:1px solid var(--b1);border-radius:11px;color:var(--t1);font-family:var(--fb);font-size:14px;outline:none;transition:border-color .2s}
+.finput:focus{border-color:var(--ng-green)}
+.fselect{width:100%;padding:12px 14px;background:var(--s2);border:1px solid var(--b1);border-radius:11px;color:var(--t1);font-family:var(--fb);font-size:14px;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer}
+.selwrap{position:relative}
+.selwrap::after{content:'▾';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--t3);pointer-events:none;font-size:11px}
+.fgroup{margin-bottom:14px}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+@keyframes slidein{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes fadeup{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* ═══════════════════════════════════════════
+   S1 — SPLASH (improved)
+═══════════════════════════════════════════ */
+#s-splash{background:linear-gradient(160deg,#091510 0%,#0D1117 65%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 28px;overflow:hidden;position:relative}
+.sp-ring{position:absolute;border-radius:50%;border:1px solid var(--ng-green);pointer-events:none}
+.sp-flag{display:flex;gap:5px;margin-bottom:28px}
+.sp-bar{width:16px;height:54px;border-radius:3px}
+.sp-bar.g{background:var(--ng-green)}
+.sp-bar.w{background:rgba(255,255,255,.88)}
+.sp-logo{font-family:var(--fd);font-size:52px;font-weight:900;color:var(--t1);letter-spacing:-1px;line-height:1;margin-bottom:5px}
+.sp-logo span{color:var(--ng-green-l)}
+.sp-by{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--t4);margin-bottom:14px;font-weight:500}
+.sp-tag{font-size:17px;color:var(--t2);line-height:1.6;margin-bottom:36px;max-width:260px;font-style:italic;font-family:var(--fd)}
+.sp-tag em{color:var(--ng-green-l);font-style:normal}
+.sp-sso{display:flex;align-items:center;gap:10px;padding:13px 18px;background:var(--ng-green-f);border:1px solid rgba(0,135,81,.3);border-radius:14px;margin-bottom:10px;cursor:pointer;transition:all .2s;width:100%}
+.sp-sso:hover{background:rgba(0,135,81,.15);border-color:rgba(0,135,81,.5)}
+.sp-sso-icon{width:32px;height:32px;background:var(--ng-green);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.sp-sso-text{text-align:left;flex:1}
+.sp-sso-title{font-size:13px;font-weight:600;color:var(--ng-green-l)}
+.sp-sso-sub{font-size:11px;color:var(--t3);margin-top:1px}
+.sp-divtext{font-size:11px;color:var(--t4);margin:8px 0;text-align:center}
+
+/* ═══════════════════════════════════════════
+   S2 — ONBOARDING (3 steps fixed)
+═══════════════════════════════════════════ */
+#s-onboard{background:var(--ink);padding:20px 22px 28px}
+.ob-steps{display:flex;gap:5px;margin-bottom:20px}
+.ob-pip{height:3px;border-radius:2px;flex:1;background:var(--s3);transition:background .3s}
+.ob-pip.done{background:var(--ng-green)}
+.ob-pip.active{background:var(--ng-green-l)}
+.ob-title{font-family:var(--fd);font-size:24px;color:var(--t1);margin-bottom:5px;line-height:1.25}
+.ob-sub{font-size:13px;color:var(--t2);line-height:1.5;margin-bottom:20px}
+.ob-step{display:none}
+.ob-step.active{display:block;animation:fadeup .3s ease}
+.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.lchip{padding:10px 12px;background:var(--s2);border:1px solid var(--b1);border-radius:9px;font-size:12px;color:var(--t2);cursor:pointer;transition:all .2s;text-align:center;font-weight:500}
+.lchip.sel{background:var(--ng-green-f);border-color:var(--ng-green);color:var(--ng-green-l)}
+.lang-all{text-align:center;font-size:12px;color:var(--ng-green-l);cursor:pointer;margin-bottom:10px;font-weight:500}
+.ob-nav{display:flex;gap:8px;margin-top:20px}
+.ob-back{flex:0 0 48px;padding:13px;background:var(--s2);border:1px solid var(--b1);border-radius:12px;color:var(--t2);cursor:pointer;font-size:18px;font-family:var(--fb)}
+
+/* ═══════════════════════════════════════════
+   S3 — HOME (improved)
+═══════════════════════════════════════════ */
+#s-home{background:var(--ink);padding:0}
+.push-notif{position:absolute;top:8px;left:16px;right:16px;z-index:100;background:var(--s2);border:1px solid var(--b2);border-radius:14px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;animation:slidein .4s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 32px rgba(0,0,0,.6);cursor:pointer}
+.push-app{width:32px;height:32px;background:var(--ng-green);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.push-title{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.push-body{font-size:11px;color:var(--t2);line-height:1.4}
+.push-dismiss{position:absolute;top:8px;right:10px;font-size:16px;color:var(--t3);cursor:pointer;background:none;border:none;color:var(--t3);font-size:14px;line-height:1}
+.home-hd{background:linear-gradient(180deg,#091510 0%,var(--ink) 100%);padding:14px 18px 18px;position:relative;overflow:hidden}
+.home-hd::before{content:'';position:absolute;top:-50px;right:-50px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(0,135,81,.12) 0%,transparent 70%);pointer-events:none}
+.gps-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:var(--ng-green-f);border:1px solid rgba(0,135,81,.3);border-radius:20px;font-size:11px;color:var(--ng-green-l);font-weight:500;margin-bottom:10px}
+.gps-dot{width:5px;height:5px;border-radius:50%;background:var(--ng-green-l);animation:pulse 2s infinite}
+.home-greet{font-family:var(--fd);font-size:20px;color:var(--t1);margin-bottom:3px;line-height:1.2}
+.home-sub2{font-size:12px;color:var(--t2)}
+
+/* Voice bar — active with AI response */
+.vbar{margin:14px 18px 0;padding:13px 16px;background:var(--s1);border:1px solid var(--b1);border-radius:14px;cursor:pointer;transition:all .2s}
+.vbar:hover,.vbar.open{border-color:var(--ng-green);background:var(--s2)}
+.vbar-top{display:flex;align-items:center;gap:10px}
+.vbar-mic{width:34px;height:34px;border-radius:9px;background:var(--ng-green-f);border:1px solid rgba(0,135,81,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.vbar-ph{font-size:13px;color:var(--t3);flex:1}
+.vbar-hint{font-size:11px;color:var(--t3)}
+.vbar-response{margin-top:10px;padding-top:10px;border-top:1px solid var(--b1);display:none;animation:fadeup .3s ease}
+.vbar.open .vbar-response{display:block}
+.vbar-q{font-size:11px;color:var(--t3);margin-bottom:6px;font-style:italic}
+.vbar-a{font-size:13px;color:var(--t1);line-height:1.6}
+.vbar-a em{color:var(--ng-green-l);font-style:normal;font-weight:500}
+.vbar-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.vbar-chip{padding:4px 10px;background:var(--s3);border:1px solid var(--b1);border-radius:20px;font-size:11px;color:var(--t2);cursor:pointer;transition:all .15s}
+.vbar-chip:hover{border-color:var(--ng-green);color:var(--ng-green-l)}
+
+.alert-strip{margin:10px 18px;padding:12px 14px;background:var(--orange-f);border:1px solid rgba(237,137,54,.3);border-radius:12px;display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.as-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.as-title{font-size:12px;font-weight:600;color:var(--orange);margin-bottom:2px}
+.as-body{font-size:11px;color:var(--t2);line-height:1.4}
+
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 18px;margin-bottom:18px}
+.qcard{padding:14px;background:var(--s1);border:1px solid var(--b1);border-radius:14px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.qcard:hover{background:var(--s2);border-color:var(--b2);transform:translateY(-2px)}
+.qcard-accent{height:2px;border-radius:2px;margin-bottom:10px}
+.qcard-icon{font-size:20px;margin-bottom:6px}
+.qcard-label{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.qcard-val{font-size:11px;color:var(--t3)}
+
+.faac-card{margin:0 18px 16px;padding:16px;background:var(--s1);border:1px solid var(--b1);border-radius:14px}
+.faac-ttl{font-size:11px;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;font-weight:500;margin-bottom:10px}
+.faac-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.faac-label{font-size:12px;color:var(--t2)}
+.faac-amt{font-family:var(--fm);font-size:12px;color:var(--ng-green-l);font-weight:500}
+.faac-track{height:3px;background:var(--s3);border-radius:2px;margin-top:4px;margin-bottom:8px}
+.faac-fill{height:3px;border-radius:2px;background:var(--ng-green)}
+
+/* ═══════════════════════════════════════════
+   S4 — LEADERS (tabs working)
+═══════════════════════════════════════════ */
+#s-leaders{background:var(--ink);padding:0}
+.ltabs{display:flex;gap:5px;padding:0 18px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.ltabs::-webkit-scrollbar{display:none}
+.ltab{padding:6px 13px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap;cursor:pointer;border:1px solid var(--b1);color:var(--t3);background:transparent;transition:all .2s;font-family:var(--fb)}
+.ltab.active{background:var(--ng-green);color:#fff;border-color:var(--ng-green)}
+.ltab-content{display:none;padding:0 18px 20px;animation:fadeup .25s ease}
+.ltab-content.active{display:block}
+
+.lcard{background:var(--s1);border:1px solid var(--b1);border-radius:16px;margin-bottom:10px;overflow:hidden;cursor:pointer;transition:all .2s}
+.lcard:hover{border-color:var(--b2);transform:translateY(-1px)}
+.lcard-top{padding:14px;display:flex;gap:12px;align-items:flex-start}
+.lcard-av{width:46px;height:46px;border-radius:12px;background:var(--s3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:1px solid var(--b1)}
+.lcard-name{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.lcard-role{font-size:11px;color:var(--t3);margin-bottom:7px}
+.lcard-contacts{display:flex;gap:6px;flex-wrap:wrap}
+.contact-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;background:var(--s2);border:1px solid var(--b1);border-radius:8px;font-size:11px;color:var(--ng-green-l);cursor:pointer;transition:all .2s;font-weight:500}
+.contact-btn:hover{background:var(--ng-green-f);border-color:var(--ng-green)}
+.lcard-stats{padding:10px 14px;border-top:1px solid var(--b1);display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.lstat{text-align:center}
+.lstat-val{font-family:var(--fm);font-size:13px;font-weight:500;color:var(--t1)}
+.lstat-key{font-size:10px;color:var(--t3);margin-top:1px}
+.lcard-meter{padding:10px 14px;border-top:1px solid var(--b1)}
+.meter-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.meter-row:last-child{margin-bottom:0}
+.meter-label{font-size:11px;color:var(--t2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meter-track{flex:2;height:4px;background:var(--s3);border-radius:2px}
+.meter-fill{height:4px;border-radius:2px}
+.meter-val{font-family:var(--fm);font-size:10px;color:var(--t2);width:28px;text-align:right;flex-shrink:0}
+
+/* NASS scorecard */
+.nass-card{background:var(--s1);border:1px solid var(--b1);border-radius:16px;margin-bottom:10px;overflow:hidden}
+.nass-hd{padding:12px 14px;background:var(--s2);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:10px}
+.nass-av{width:40px;height:40px;border-radius:10px;background:var(--ng-green-f);display:flex;align-items:center;justify-content:center;font-size:18px;border:1px solid rgba(0,135,81,.3)}
+.nass-name{font-size:13px;font-weight:600;color:var(--t1)}
+.nass-role{font-size:11px;color:var(--t3)}
+.nass-metrics{padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.nm{padding:10px;background:var(--s2);border-radius:10px;text-align:center}
+.nm-val{font-family:var(--fm);font-size:16px;font-weight:500;color:var(--t1)}
+.nm-key{font-size:10px;color:var(--t3);margin-top:2px}
+.nass-attend{padding:10px 14px;border-top:1px solid var(--b1)}
+.attend-label{font-size:11px;color:var(--t3);margin-bottom:5px}
+.attend-track{height:5px;background:var(--s3);border-radius:3px}
+.attend-fill{height:5px;border-radius:3px;background:var(--ng-green)}
+.attend-val{font-size:11px;color:var(--ng-green-l);margin-top:4px;font-family:var(--fm)}
+
+/* Leaderboard */
+.lb{background:var(--s1);border:1px solid var(--b1);border-radius:14px;overflow:hidden;margin-bottom:10px}
+.lb-hd{padding:10px 14px;background:var(--s2);border-bottom:1px solid var(--b1);font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.07em;text-transform:uppercase}
+.lb-row{padding:10px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--b1);cursor:pointer;transition:background .15s}
+.lb-row:hover{background:var(--s2)}
+.lb-row:last-child{border-bottom:none}
+.lb-row.you{background:rgba(212,160,23,.04);border-left:2px solid var(--gold)}
+.lb-rank{width:22px;font-family:var(--fm);font-size:11px;color:var(--t3);flex-shrink:0}
+.lb-rank.g1{color:var(--gold-l);font-weight:600}
+.lb-rank.g2{color:#C0C0C0;font-weight:600}
+.lb-rank.g3{color:#CD7F32;font-weight:600}
+.lb-name{flex:1}
+.lb-n{font-size:12px;font-weight:500;color:var(--t1)}
+.lb-area{font-size:10px;color:var(--t3);margin-top:1px}
+.lb-score{font-family:var(--fm);font-size:12px;color:var(--ng-green-l);font-weight:500}
+
+/* ═══════════════════════════════════════════
+   S5 — REPORTING (fixed)
+═══════════════════════════════════════════ */
+#s-report{background:var(--ink);padding:0}
+.rcat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 18px;margin-bottom:18px}
+.rcat{padding:14px;background:var(--s1);border:1px solid var(--b1);border-radius:14px;cursor:pointer;transition:all .2s;text-align:center}
+.rcat:hover{background:var(--s2);border-color:var(--b2)}
+.rcat.whistle{background:var(--purple-f);border-color:rgba(159,122,234,.3)}
+.rcat.positive{background:var(--ng-green-f);border-color:rgba(0,135,81,.3)}
+.rcat-icon{font-size:22px;margin-bottom:6px}
+.rcat-label{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.rcat-count{font-size:10px;color:var(--t3)}
+
+.rform{margin:0 18px 16px;padding:18px;background:var(--s1);border:1px solid var(--b1);border-radius:16px}
+.rform-title{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:14px}
+.ftextarea{width:100%;padding:12px 14px;background:var(--s2);border:1px solid var(--b1);border-radius:11px;color:var(--t1);font-family:var(--fb);font-size:13px;outline:none;resize:none;height:90px;line-height:1.5;margin-bottom:10px}
+.ftextarea:focus{border-color:var(--ng-green)}
+.media-row{display:flex;gap:6px;margin-bottom:10px}
+.mbtn{flex:1;padding:9px;background:var(--s2);border:1px dashed var(--b2);border-radius:9px;color:var(--t3);font-size:11px;font-weight:500;cursor:pointer;text-align:center;transition:all .2s;font-family:var(--fb)}
+.mbtn:hover{border-color:var(--ng-green);color:var(--ng-green-l)}
+
+/* Success state */
+.success-state{display:none;text-align:center;padding:20px;animation:fadeup .3s ease}
+.success-state.show{display:block}
+.success-icon{font-size:40px;margin-bottom:10px}
+.success-title{font-size:16px;font-weight:600;color:var(--ng-green-l);margin-bottom:5px}
+.success-ref{font-family:var(--fm);font-size:12px;color:var(--t3);margin-bottom:8px}
+.success-body{font-size:13px;color:var(--t2);line-height:1.5}
+
+/* Report feed */
+.ri{padding:12px 18px;display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid var(--b1);cursor:pointer;transition:background .15s}
+.ri:hover{background:var(--s1)}
+.ri:last-child{border-bottom:none}
+.ri-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.ri-dot.pend{background:var(--orange)}
+.ri-dot.res{background:var(--ng-green-l)}
+.ri-dot.act{background:var(--blue)}
+.ri-title{font-size:13px;font-weight:500;color:var(--t1);margin-bottom:2px}
+.ri-meta{font-size:11px;color:var(--t3)}
+
+/* ═══════════════════════════════════════════
+   S6 — ELECTIONS
+═══════════════════════════════════════════ */
+#s-elections{background:var(--ink);padding:0}
+.elec-hero{background:linear-gradient(135deg,#0c1a0f,#150a0a);border-bottom:1px solid var(--b1);padding:18px;position:relative;overflow:hidden;text-align:center}
+.elec-hero::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(212,160,23,.07) 0%,transparent 70%);pointer-events:none}
+.elec-flag{font-size:28px;margin-bottom:6px}
+.elec-title{font-family:var(--fd);font-size:20px;color:var(--gold-l);margin-bottom:3px}
+.elec-sub{font-size:12px;color:var(--t2);margin-bottom:14px}
+.cd-row{display:flex;justify-content:center;gap:20px;margin-bottom:14px}
+.cd-blk{text-align:center}
+.cd-num{font-family:var(--fm);font-size:26px;font-weight:500;color:var(--gold-l);line-height:1}
+.cd-lbl{font-size:9px;color:var(--t3);margin-top:2px;letter-spacing:.1em;text-transform:uppercase}
+
+/* Debate card */
+.debate-card{margin:14px 18px;padding:16px;background:linear-gradient(135deg,#0e1c2e,#0a1a0f);border:1px solid rgba(0,135,81,.25);border-radius:16px}
+.debate-live-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;background:var(--red-f);border:1px solid rgba(229,62,62,.3);border-radius:20px;font-size:9px;font-weight:600;color:var(--red);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--red);animation:pulse 1.5s infinite}
+.debate-title{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:3px}
+.debate-meta{font-size:11px;color:var(--t2);margin-bottom:12px}
+.debate-cands{display:flex;gap:6px;margin-bottom:12px}
+.dc{flex:1;padding:8px;background:rgba(0,0,0,.2);border-radius:8px;text-align:center}
+.dc-av{font-size:18px;margin-bottom:3px}
+.dc-name{font-size:10px;font-weight:500;color:var(--t1);margin-bottom:1px}
+.dc-party{font-size:9px;color:var(--t3)}
+.mic-active{border:1px solid var(--ng-green);background:var(--ng-green-f)}
+.mic-muted{border:1px solid var(--b1);opacity:.6}
+.ai-mod{display:flex;align-items:center;gap:6px;margin-bottom:12px;padding:8px;background:var(--s2);border-radius:8px}
+.ai-mod-icon{font-size:14px}
+.ai-mod-text{font-size:11px;color:var(--t2)}
+.ai-mod-text strong{color:var(--ng-green-l)}
+.qinput{display:flex;gap:6px}
+.qinput input{flex:1;padding:9px 12px;background:var(--s2);border:1px solid var(--b1);border-radius:10px;color:var(--t1);font-family:var(--fb);font-size:12px;outline:none}
+.qinput input:focus{border-color:var(--ng-green)}
+.qinput button{padding:9px 14px;background:var(--ng-green);color:#fff;border:none;border-radius:10px;font-family:var(--fb);font-size:12px;font-weight:600;cursor:pointer}
+
+/* KYC cards with citizen rating */
+.kyc{background:var(--s1);border:1px solid var(--b1);border-radius:16px;margin-bottom:10px;overflow:hidden;cursor:pointer;transition:all .2s}
+.kyc:hover{border-color:var(--b2);transform:translateY(-1px)}
+.kyc-top{padding:14px;display:flex;gap:12px;align-items:flex-start}
+.kyc-av{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.kyc-party{display:inline-block;padding:2px 7px;border-radius:8px;font-size:9px;font-weight:600;margin-bottom:3px}
+.apc{background:var(--blue-f);color:var(--blue)}
+.pdp{background:var(--ng-green-f);color:var(--ng-green-l)}
+.lp{background:var(--orange-f);color:var(--orange)}
+.kyc-name{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.kyc-seat{font-size:11px;color:var(--t3)}
+.kyc-checks{padding:10px 14px;border-top:1px solid var(--b1)}
+.kc-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.kc-row:last-child{margin-bottom:0}
+.kc-label{font-size:12px;color:var(--t2)}
+.kc-ok{font-size:12px;color:var(--ng-green-l);font-weight:500}
+.kc-warn{font-size:12px;color:var(--orange);font-weight:500}
+.kc-stars{color:var(--gold-l);font-size:11px}
+/* Citizen rating tool */
+.kyc-rate{padding:12px 14px;border-top:1px solid var(--b1);background:var(--ng-green-f)}
+.kyc-rate-lbl{font-size:11px;font-weight:600;color:var(--ng-green-l);margin-bottom:8px}
+.rate-metrics{display:flex;flex-direction:column;gap:5px}
+.rm-row{display:flex;align-items:center;gap:8px}
+.rm-label{font-size:11px;color:var(--t2);flex:1}
+.rm-stars{display:flex;gap:3px}
+.rm-star{font-size:12px;cursor:pointer;transition:transform .15s;color:var(--t4)}
+.rm-star:hover,.rm-star.lit{color:var(--gold-l);transform:scale(1.2)}
+
+/* Vote aggregation */
+.vote-hero{margin:14px 18px;padding:16px;background:linear-gradient(135deg,#0a1020,#0f1a10);border:1px solid rgba(0,135,81,.2);border-radius:16px}
+.vh-title{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:3px}
+.vh-sub{font-size:11px;color:var(--t2);margin-bottom:12px}
+.vote-progress{margin-bottom:12px}
+.vp-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.vp-label{font-size:12px;color:var(--t2)}
+.vp-pct{font-family:var(--fm);font-size:11px;color:var(--ng-green-l)}
+.vp-track{height:8px;background:var(--s3);border-radius:4px;overflow:hidden}
+.vp-fill{height:8px;border-radius:4px}
+.vp-fill.apc-col{background:var(--blue)}
+.vp-fill.pdp-col{background:var(--ng-green)}
+.vp-fill.lp-col{background:var(--orange)}
+.vp-label2{font-size:10px;color:var(--t3);margin-bottom:8px}
+.pu-input{padding:10px 14px;background:var(--s2);border:1px solid var(--b1);border-radius:10px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;cursor:pointer;transition:all .2s}
+.pu-input:hover{border-color:var(--ng-green)}
+.pu-label{font-size:12px;color:var(--t2)}
+.pu-status{font-size:10px;color:var(--ng-green-l);font-weight:500}
+
+/* ═══════════════════════════════════════════
+   S7 — TAX DASHBOARD (full rebuild)
+═══════════════════════════════════════════ */
+#s-tax{background:var(--ink);padding:0}
+.tax-period-toggle{display:flex;gap:4px;padding:12px 18px 0}
+.tpt{flex:1;padding:7px;background:var(--s2);border:1px solid var(--b1);border-radius:9px;font-size:11px;font-weight:500;color:var(--t3);cursor:pointer;text-align:center;transition:all .2s;font-family:var(--fb);border:none}
+.tpt.active{background:var(--ng-green);color:#fff}
+
+.tax-hero{margin:12px 18px;padding:20px;background:var(--s1);border:1px solid var(--b1);border-radius:16px;text-align:center}
+.tax-label{font-size:11px;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;font-weight:500;margin-bottom:6px}
+.tax-total{font-family:var(--fd);font-size:34px;color:var(--ng-green-l);margin-bottom:3px;line-height:1}
+.tax-tin{font-size:11px;color:var(--t3);font-family:var(--fm);margin-bottom:14px}
+.tax-segs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.tseg{text-align:center;padding:10px;background:var(--s2);border-radius:9px}
+.tseg-val{font-family:var(--fm);font-size:13px;font-weight:500;color:var(--t1)}
+.tseg-key{font-size:10px;color:var(--t3);margin-top:2px}
+
+/* IGR ranking */
+.igr-card{margin:0 18px 14px;padding:14px;background:linear-gradient(135deg,var(--ng-green-f),rgba(0,135,81,.05));border:1px solid rgba(0,135,81,.25);border-radius:14px;display:flex;align-items:center;gap:12px}
+.igr-icon{font-size:28px;flex-shrink:0}
+.igr-text{flex:1}
+.igr-title{font-size:13px;font-weight:600;color:var(--ng-green-l);margin-bottom:2px}
+.igr-sub{font-size:11px;color:var(--t2);line-height:1.4}
+.igr-rank{font-family:var(--fd);font-size:22px;color:var(--gold-l);font-weight:700}
+
+/* Tax transaction ledger */
+.ledger{margin:0 18px 14px;background:var(--s1);border:1px solid var(--b1);border-radius:16px;overflow:hidden}
+.ledger-hd{padding:10px 14px;background:var(--s2);border-bottom:1px solid var(--b1);font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.07em;text-transform:uppercase}
+.tx-row{padding:12px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--b1);cursor:pointer;transition:background .15s}
+.tx-row:hover{background:var(--s2)}
+.tx-row:last-child{border-bottom:none}
+.tx-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.tx-icon.paye{background:var(--blue-f);border:1px solid rgba(66,153,225,.3)}
+.tx-icon.gig{background:var(--ng-green-f);border:1px solid rgba(0,135,81,.3)}
+.tx-icon.vat{background:var(--orange-f);border:1px solid rgba(237,137,54,.3)}
+.tx-body{flex:1}
+.tx-title{font-size:12px;font-weight:500;color:var(--t1)}
+.tx-sub{font-size:10px;color:var(--t3);margin-top:1px}
+.tx-right{text-align:right}
+.tx-amt{font-family:var(--fm);font-size:12px;color:var(--ng-green-l);font-weight:500}
+.tx-date{font-size:10px;color:var(--t3);margin-top:1px}
+
+/* Receipt modal */
+.receipt-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:none;align-items:center;justify-content:center;padding:40px 20px}
+.receipt-modal.open{display:flex}
+.receipt{background:var(--s1);border:1px solid var(--b2);border-radius:20px;padding:24px;width:100%;max-width:320px;animation:fadeup .3s cubic-bezier(.34,1.3,.64,1)}
+.receipt-header{text-align:center;margin-bottom:18px;padding-bottom:18px;border-bottom:1px dashed var(--b2)}
+.receipt-logo{font-family:var(--fd);font-size:22px;color:var(--ng-green-l);margin-bottom:2px}
+.receipt-sub{font-size:11px;color:var(--t3);letter-spacing:.1em;text-transform:uppercase}
+.receipt-amt{font-family:var(--fd);font-size:32px;color:var(--t1);margin:12px 0 0;font-weight:700}
+.receipt-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px}
+.receipt-row .k{color:var(--t3)}
+.receipt-row .v{color:var(--t1);font-family:var(--fm);font-size:11px}
+.receipt-close{margin-top:16px;width:100%;padding:11px;background:var(--s2);border:1px solid var(--b1);border-radius:10px;color:var(--t2);font-family:var(--fb);font-size:13px;cursor:pointer}
+
+/* Freedom link */
+.fl-card{margin:0 18px 14px;padding:14px;background:var(--ng-green-f);border:1px solid rgba(0,135,81,.25);border-radius:14px;display:flex;gap:12px;align-items:center;cursor:pointer}
+.fl-icon{font-size:24px;flex-shrink:0}
+.fl-text{flex:1}
+.fl-title{font-size:13px;font-weight:600;color:var(--ng-green-l);margin-bottom:2px}
+.fl-body{font-size:11px;color:var(--t2);line-height:1.4}
+.fl-arr{color:var(--ng-green-l);font-size:16px}
+
+/* Destination bars */
+.dest-card{margin:0 18px 16px;background:var(--s1);border:1px solid var(--b1);border-radius:14px;overflow:hidden}
+.dest-hd{padding:10px 14px;background:var(--s2);border-bottom:1px solid var(--b1);font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.07em;text-transform:uppercase}
+.dest-row{padding:12px 14px;border-bottom:1px solid var(--b1)}
+.dest-row:last-child{border-bottom:none}
+.dest-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.dest-label{font-size:12px;color:var(--t2)}
+.dest-amt{font-family:var(--fm);font-size:11px;color:var(--ng-green-l)}
+.dest-track{height:5px;background:var(--s3);border-radius:3px}
+.dest-fill{height:5px;border-radius:3px;background:var(--ng-green)}
+
+/* Accountability prompt */
+.acct-prompt{margin:0 18px 16px;padding:14px;background:var(--s2);border:1px solid var(--b1);border-radius:12px}
+.ap-text{font-size:12px;color:var(--t2);line-height:1.6}
+.ap-link{color:var(--ng-green-l);cursor:pointer;font-weight:500}
+
+/* ═══════════════════════════════════════════
+   S8 — LEGAL RIGHTS (new screen)
+═══════════════════════════════════════════ */
+#s-legal{background:var(--ink);padding:0}
+.legal-hero{padding:18px;background:linear-gradient(180deg,#0f0d1a,var(--ink));border-bottom:1px solid var(--b1)}
+.legal-voice{margin:14px 18px;padding:14px;background:var(--s1);border:1px solid var(--b1);border-radius:14px}
+.lv-q{font-size:13px;font-style:italic;color:var(--t2);margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--b1);line-height:1.5}
+.lv-response{display:flex;gap:10px;align-items:flex-start}
+.lv-ai{width:30px;height:30px;border-radius:8px;background:var(--ng-green);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.lv-answer{flex:1;font-size:13px;color:var(--t1);line-height:1.6}
+.lv-answer em{color:var(--ng-green-l);font-style:normal}
+.lv-citation{font-size:11px;color:var(--t3);margin-top:6px;padding-top:6px;border-top:1px solid var(--b1);font-family:var(--fm)}
+.rights-cats{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 18px;margin-bottom:16px}
+.rcat2{padding:14px;background:var(--s1);border:1px solid var(--b1);border-radius:12px;cursor:pointer;transition:all .2s}
+.rcat2:hover{background:var(--s2);border-color:var(--b2);transform:translateY(-1px)}
+.rcat2-icon{font-size:20px;margin-bottom:5px}
+.rcat2-label{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.rcat2-sub{font-size:11px;color:var(--t3)}
+.popular-q{margin:0 18px 16px;background:var(--s1);border:1px solid var(--b1);border-radius:14px;overflow:hidden}
+.pq-row{padding:12px 14px;border-bottom:1px solid var(--b1);cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:10px}
+.pq-row:hover{background:var(--s2)}
+.pq-row:last-child{border-bottom:none}
+.pq-icon{font-size:14px;width:28px;flex-shrink:0;text-align:center}
+.pq-text{flex:1;font-size:12px;color:var(--t2)}
+.pq-arr{font-size:12px;color:var(--t4)}
+
+/* ═══════════════════════════════════════════
+   S9 — BUDGET ANALYSIS (new screen)
+═══════════════════════════════════════════ */
+#s-budget{background:var(--ink);padding:0}
+.budget-hero{padding:18px;background:linear-gradient(180deg,#0f1a0a,var(--ink));border-bottom:1px solid var(--b1)}
+.budget-year-toggle{display:flex;gap:4px;margin-top:12px}
+.byt{flex:1;padding:6px;background:var(--s2);border:none;border-radius:8px;font-size:11px;color:var(--t3);cursor:pointer;text-align:center;transition:all .2s;font-family:var(--fb);font-weight:500}
+.byt.active{background:var(--ng-green);color:#fff}
+.budget-total-card{margin:14px 18px;padding:16px;background:var(--s1);border:1px solid var(--b1);border-radius:14px;text-align:center}
+.btc-label{font-size:11px;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px}
+.btc-val{font-family:var(--fd);font-size:32px;color:var(--t1);margin-bottom:3px}
+.btc-change{font-size:12px;color:var(--ng-green-l)}
+.btc-change.neg{color:var(--red)}
+.sector-breakdown{margin:0 18px 14px;background:var(--s1);border:1px solid var(--b1);border-radius:14px;overflow:hidden}
+.sb-hd{padding:10px 14px;background:var(--s2);border-bottom:1px solid var(--b1);font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.07em;text-transform:uppercase}
+.sb-row{padding:12px 14px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:10px}
+.sb-row:last-child{border-bottom:none}
+.sb-color{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sb-label{flex:1;font-size:12px;color:var(--t2)}
+.sb-bar-wrap{flex:2;height:5px;background:var(--s3);border-radius:3px}
+.sb-bar{height:5px;border-radius:3px}
+.sb-pct{font-family:var(--fm);font-size:11px;color:var(--t2);width:36px;text-align:right}
+.global-compare{margin:0 18px 14px;padding:14px;background:var(--s1);border:1px solid var(--b1);border-radius:14px}
+.gc-title{font-size:12px;font-weight:600;color:var(--t2);margin-bottom:10px;letter-spacing:.06em;text-transform:uppercase}
+.gc-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.gc-flag{font-size:14px;flex-shrink:0;width:20px}
+.gc-country{flex:1;font-size:12px;color:var(--t2)}
+.gc-track{flex:2;height:4px;background:var(--s3);border-radius:2px}
+.gc-fill{height:4px;border-radius:2px;background:var(--blue)}
+.gc-fill.highlight{background:var(--ng-green)}
+.gc-pct{font-family:var(--fm);font-size:10px;color:var(--t2);width:32px;text-align:right}
+
+/* ═══════════════════════════════════════════
+   S10 — CIVICIQ (fixed)
+═══════════════════════════════════════════ */
+#s-game{background:var(--ink);padding:0}
+.game-hero{padding:18px;background:linear-gradient(135deg,#141006,#060C14);border-bottom:1px solid var(--b1);text-align:center}
+.game-title{font-family:var(--fd);font-size:22px;color:var(--gold-l);margin-bottom:3px}
+.game-sub{font-size:12px;color:var(--t2);margin-bottom:12px}
+.rank-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:var(--gold-f);border:1px solid rgba(212,160,23,.3);border-radius:20px}
+.rp-label{font-size:11px;color:var(--t2)}
+.rp-num{font-family:var(--fd);font-size:20px;color:var(--gold-l);font-weight:700}
+.rp-total{font-size:11px;color:var(--t3)}
+
+/* Points bar */
+.pts-card{margin:12px 18px;padding:12px 14px;background:var(--s1);border:1px solid var(--b1);border-radius:12px;display:flex;align-items:center;gap:12px}
+.pts-icon{font-size:22px;flex-shrink:0}
+.pts-body{flex:1}
+.pts-title{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:3px}
+.pts-track{height:5px;background:var(--s3);border-radius:3px}
+.pts-fill{height:5px;border-radius:3px;background:var(--gold)}
+.pts-sub{font-size:10px;color:var(--t3);margin-top:3px}
+.pts-val{font-family:var(--fm);font-size:16px;color:var(--gold-l);font-weight:500}
+
+/* Game show teaser */
+.gameshow-card{margin:0 18px 14px;padding:14px;background:linear-gradient(135deg,var(--gold-f),rgba(212,160,23,.03));border:1px solid rgba(212,160,23,.3);border-radius:14px}
+.gs-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;background:var(--gold-f);border:1px solid rgba(212,160,23,.4);border-radius:10px;font-size:9px;font-weight:600;color:var(--gold-l);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.gs-title{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:3px}
+.gs-sub{font-size:11px;color:var(--t2);margin-bottom:10px;line-height:1.4}
+.gs-finalists{display:flex;gap:6px;margin-bottom:10px}
+.gsf{text-align:center}
+.gsf-av{font-size:18px;margin-bottom:2px}
+.gsf-name{font-size:9px;color:var(--t3)}
+.gsf-vs{font-size:10px;color:var(--t4);align-self:center;flex:1;text-align:center}
+
+/* Topic categories */
+.topic-cats{display:flex;gap:5px;padding:0 18px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none}
+.topic-cats::-webkit-scrollbar{display:none}
+.tcat{padding:6px 12px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap;cursor:pointer;border:1px solid var(--b1);color:var(--t3);background:transparent;transition:all .2s;font-family:var(--fb)}
+.tcat.active{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+
+/* Quiz */
+.quiz-card{margin:0 18px 12px;padding:16px;background:var(--s1);border:1px solid var(--b1);border-radius:16px}
+.quiz-tag-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;background:var(--ng-green-f);border:1px solid rgba(0,135,81,.3);border-radius:10px;font-size:9px;font-weight:600;color:var(--ng-green-l);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.quiz-q{font-size:14px;font-weight:500;color:var(--t1);margin-bottom:14px;line-height:1.5}
+.quiz-opts{display:flex;flex-direction:column;gap:7px}
+.qopt{padding:11px 14px;background:var(--s2);border:1px solid var(--b1);border-radius:11px;font-size:12px;color:var(--t2);cursor:pointer;transition:all .2s;font-family:var(--fb);text-align:left;width:100%}
+.qopt:hover:not(:disabled){background:var(--s3);border-color:var(--b2);color:var(--t1)}
+.qopt.correct{background:rgba(0,135,81,.15);border-color:var(--ng-green);color:var(--ng-green-l)}
+.qopt.wrong{background:var(--red-f);border-color:var(--red);color:var(--red)}
+.quiz-result{margin-top:10px;padding:10px;background:var(--s2);border-radius:10px;font-size:12px;color:var(--t2);line-height:1.5;display:none}
+.quiz-result.show{display:block}
+.quiz-result em{color:var(--ng-green-l);font-style:normal;font-weight:500}
+
+/* Game leaderboard */
+.glb{margin:0 18px 20px;background:var(--s1);border:1px solid var(--b1);border-radius:14px;overflow:hidden}
+.glb-hd{padding:10px 14px;background:var(--s2);border-bottom:1px solid var(--b1);font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;display:flex;justify-content:space-between}
+.glb-row{padding:10px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--b1);cursor:pointer;transition:background .15s}
+.glb-row:hover{background:var(--s2)}
+.glb-row:last-child{border-bottom:none}
+.glb-row.you{background:rgba(212,160,23,.04);border-left:2px solid var(--gold)}
+.glb-pos{width:22px;font-family:var(--fm);font-size:11px;color:var(--t3)}
+.glb-name{flex:1;font-size:12px;font-weight:500;color:var(--t1)}
+.glb-pts{font-family:var(--fm);font-size:11px;color:var(--gold-l)}
+.glb-badge{font-size:12px}
+
+/* ═══════════════════════════════════════════
+   MORE SCREEN
+═══════════════════════════════════════════ */
+#s-more{background:var(--ink);padding:20px}
+.more-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.more-card{padding:18px;background:var(--s1);border:1px solid var(--b1);border-radius:16px;cursor:pointer;transition:all .2s;position:relative}
+.more-card:hover{background:var(--s2);border-color:var(--b2);transform:translateY(-2px)}
+.mc-icon{font-size:26px;margin-bottom:8px}
+.mc-label{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:3px}
+.mc-sub{font-size:11px;color:var(--t3);line-height:1.4}
+.mc-new{position:absolute;top:10px;right:10px;font-size:9px;padding:2px 6px;background:var(--gold-f);border:1px solid rgba(212,160,23,.3);border-radius:6px;color:var(--gold-l);font-weight:600}
+
+.version-note{padding:12px 14px;background:var(--s2);border-radius:12px;font-size:11px;color:var(--t3);text-align:center;line-height:1.5}
+.version-note strong{color:var(--ng-green-l)}
+
+/* ── RECEIPT MODAL ──────────────────────────── */
+</style>
+</head>
+<body>
+
+<!-- Receipt modal (overlay) -->
+<div class="receipt-modal" id="receipt-modal" onclick="if(event.target===this)closeReceipt()">
+  <div class="receipt">
+    <div class="receipt-header">
+      <div class="receipt-logo">Citizen.</div>
+      <div class="receipt-sub">Official Tax Receipt</div>
+      <div class="receipt-amt">₦51,200</div>
+    </div>
+    <div class="receipt-row"><span class="k">TIN</span><span class="v">1234-5678-NG</span></div>
+    <div class="receipt-row"><span class="k">Taxpayer</span><span class="v">Lanre Ojutalayo</span></div>
+    <div class="receipt-row"><span class="k">Source</span><span class="v">PAYE — March 2026</span></div>
+    <div class="receipt-row"><span class="k">Employer</span><span class="v">Self / Freelance</span></div>
+    <div class="receipt-row"><span class="k">To Lagos State</span><span class="v">₦25,600</span></div>
+    <div class="receipt-row"><span class="k">To Federal</span><span class="v">₦20,480</span></div>
+    <div class="receipt-row"><span class="k">To Eti-Osa LGA</span><span class="v">₦5,120</span></div>
+    <div class="receipt-row"><span class="k">Reference</span><span class="v">TX-202603-0042</span></div>
+    <div class="receipt-row"><span class="k">Date</span><span class="v">31 Mar 2026</span></div>
+    <button class="receipt-close" onclick="closeReceipt()">Close receipt</button>
+  </div>
+</div>
+
+<div class="phone-wrap">
+  <div class="phone">
+    <div class="sbar">
+      <span class="sbar-time">9:41</span>
+      <div class="sbar-icons">
+        <svg width="15" height="11" viewBox="0 0 16 12" fill="none"><rect x="0" y="3" width="3" height="9" rx="1" fill="currentColor" opacity="0.4"/><rect x="4.5" y="2" width="3" height="10" rx="1" fill="currentColor" opacity="0.6"/><rect x="9" y="0" width="3" height="12" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="2.5" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="15" height="11" viewBox="0 0 16 12" fill="none"><path d="M8 2C10.2 2 12.2 3 13.6 4.6L15 3.2C13.2 1.2 10.7 0 8 0C5.3 0 2.8 1.2 1 3.2L2.4 4.6C3.8 3 5.8 2 8 2Z" fill="currentColor" opacity="0.5"/><path d="M8 5C9.5 5 10.9 5.7 11.9 6.8L13.3 5.4C11.9 3.9 10 3 8 3C6 3 4.1 3.9 2.7 5.4L4.1 6.8C5.1 5.7 6.5 5 8 5Z" fill="currentColor" opacity="0.7"/><circle cx="8" cy="10" r="2" fill="currentColor"/></svg>
+        <svg width="24" height="11" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3.5" stroke="currentColor" stroke-opacity="0.35"/><rect x="2" y="2" width="17" height="8" rx="2" fill="currentColor"/><path d="M24 4.5V7.5C24.8 7.2 25.5 6.5 25.5 6C25.5 5.5 24.8 4.8 24 4.5Z" fill="currentColor" opacity="0.4"/></svg>
+      </div>
+    </div>
+
+    <div class="screens">
+
+      <!-- ════ S1: SPLASH ════ -->
+      <div class="screen active" id="s-splash">
+        <div class="sp-ring" style="width:280px;height:280px;top:-90px;left:-60px;opacity:.05"></div>
+        <div class="sp-ring" style="width:480px;height:480px;top:-190px;left:-160px;opacity:.03"></div>
+        <div class="sp-flag">
+          <div class="sp-bar g"></div><div class="sp-bar w"></div><div class="sp-bar g"></div>
+        </div>
+        <div class="sp-logo">Citizen<span>.</span></div>
+        <div class="sp-by">by Dignity</div>
+        <div class="sp-tag"><em>Power back to the people.</em><br>Every right. Every naira. Every vote.</div>
+        <!-- Freedom SSO entry (v2 fix) -->
+        <div class="sp-sso" onclick="goTo('s-home')">
+          <div class="sp-sso-icon">⚡</div>
+          <div class="sp-sso-text">
+            <div class="sp-sso-title">Continue from Freedom</div>
+            <div class="sp-sso-sub">Lanre Ojutalayo · TIN linked · One tap</div>
+          </div>
+          <span style="color:var(--ng-green-l);font-size:16px">→</span>
+        </div>
+        <button class="btn-p" onclick="goTo('s-onboard')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          New citizen registration
+        </button>
+        <div class="sp-divtext">or</div>
+        <button class="btn-s" onclick="goTo('s-home')">Sign in with NIN</button>
+      </div>
+
+      <!-- ════ S2: ONBOARDING (3 steps) ════ -->
+      <div class="screen" id="s-onboard">
+        <div class="ob-steps">
+          <div class="ob-pip done" id="pip1"></div>
+          <div class="ob-pip active" id="pip2"></div>
+          <div class="ob-pip" id="pip3"></div>
+        </div>
+        <!-- Step 1 -->
+        <div class="ob-step active" id="ob1">
+          <div class="ob-title">Personal identity</div>
+          <div class="ob-sub">Your identity is verified against NIN and TIN databases. This is never shared.</div>
+          <div class="fgroup"><label class="fi">Full name</label><input class="finput" type="text" value="Lanre Ojutalayo"></div>
+          <div class="fgroup"><label class="fi">National ID (NIN)</label><input class="finput" type="text" placeholder="••••••••••••"></div>
+          <div class="fgroup"><label class="fi">Tax ID (TIN) — links Freedom earnings</label><input class="finput" type="text" placeholder="1234-5678-NG" value="1234-5678-NG"></div>
+          <div class="fgroup"><label class="fi">Phone number</label><input class="finput" type="text" placeholder="+234 801 234 5678"></div>
+          <button class="btn-p" onclick="obNext(2)">Continue →</button>
+        </div>
+        <!-- Step 2 -->
+        <div class="ob-step" id="ob2">
+          <div class="ob-title">Your location</div>
+          <div class="ob-sub">Your state and LGA determines your civic feed, your leaders, and your FAAC data.</div>
+          <div class="fgroup"><label class="fi">State of origin</label><div class="selwrap"><select class="fselect"><option>Lagos State</option><option>Abuja FCT</option><option>Ogun State</option><option>Kano State</option></select></div></div>
+          <div class="fgroup"><label class="fi">LGA of origin</label><div class="selwrap"><select class="fselect"><option>Eti-Osa LGA</option><option>Ikorodu LGA</option><option>Surulere LGA</option></select></div></div>
+          <div class="fgroup"><label class="fi">Current state of residence</label><div class="selwrap"><select class="fselect"><option>Lagos State</option><option>Abuja FCT</option></select></div></div>
+          <div class="fgroup"><label class="fi">Current LGA of residence</label><div class="selwrap"><select class="fselect"><option>Eti-Osa LGA</option><option>Lekki LGA</option></select></div></div>
+          <div class="ob-nav">
+            <button class="ob-back" onclick="obNext(1)">←</button>
+            <button class="btn-p" style="flex:1;margin:0" onclick="obNext(3)">Continue →</button>
+          </div>
+        </div>
+        <!-- Step 3 -->
+        <div class="ob-step" id="ob3">
+          <div class="ob-title">Your languages</div>
+          <div class="ob-sub">Citizen speaks your language. Select all that apply — AI will respond in your preferred language.</div>
+          <div class="lang-all" onclick="toggleAllLangs()">☑ Select all languages</div>
+          <div class="lang-grid">
+            <div class="lchip sel" onclick="this.classList.toggle('sel')">English</div>
+            <div class="lchip" onclick="this.classList.toggle('sel')">Yoruba</div>
+            <div class="lchip" onclick="this.classList.toggle('sel')">Igbo</div>
+            <div class="lchip" onclick="this.classList.toggle('sel')">Hausa</div>
+            <div class="lchip" onclick="this.classList.toggle('sel')">Pidgin</div>
+            <div class="lchip" onclick="this.classList.toggle('sel')">Efik</div>
+            <div class="lchip" onclick="this.classList.toggle('sel')">Fulfulde</div>
+            <div class="lchip" onclick="this.classList.toggle('sel')">Kanuri</div>
+          </div>
+          <div class="ob-nav" style="margin-top:20px">
+            <button class="ob-back" onclick="obNext(2)">←</button>
+            <button class="btn-p" style="flex:1;margin:0" onclick="goTo('s-home')">Enter Citizen →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ S3: HOME ════ -->
+      <div class="screen" id="s-home">
+        <!-- Push notification simulation -->
+        <div class="push-notif" id="push-notif">
+          <div class="push-app">🗺️</div>
+          <div style="flex:1">
+            <div class="push-title">Welcome to Eti-Osa LGA</div>
+            <div class="push-body">₦823.4M allocated this month · 11 open issues · 14 election candidates verified · Tap to explore</div>
+          </div>
+          <button class="push-dismiss" onclick="dismissPush()">✕</button>
+        </div>
+        <div class="home-hd">
+          <div class="gps-pill"><div class="gps-dot"></div>Eti-Osa LGA, Lagos</div>
+          <div class="home-greet">Good morning, Lanre 👋</div>
+          <div class="home-sub2">11 active issues · Election in <span id="days-left">302</span> days · Your CivicIQ: #47</div>
+        </div>
+        <!-- Voice bar with AI response -->
+        <div class="vbar" id="vbar" onclick="toggleVoice()">
+          <div class="vbar-top">
+            <div class="vbar-mic">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--ng-green-l)" stroke-width="2.5"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </div>
+            <span class="vbar-ph" id="vbar-ph">Ask Citizen anything…</span>
+            <span class="vbar-hint">🎤</span>
+          </div>
+          <div class="vbar-response" id="vbar-resp">
+            <div class="vbar-q">"How much has been disbursed on road infrastructure in Eti-Osa this year?"</div>
+            <div class="vbar-a">Eti-Osa LGA received <em>₦823.4M in March 2026</em> from FAAC. Of this, <em>₦124.5M (15.1%)</em> was allocated to road infrastructure per the approved budget. Year-to-date 2026, total road allocation is <em>₦372.3M</em>. The last verified road project completed was Admiralty Way resurfacing in January 2026.</div>
+            <div class="vbar-chips">
+              <span class="vbar-chip">See all projects</span>
+              <span class="vbar-chip">Report a bad road</span>
+              <span class="vbar-chip">Compare to 2025</span>
+            </div>
+          </div>
+        </div>
+        <div class="alert-strip" onclick="goTo('s-elections')">
+          <div class="as-icon">🗳️</div>
+          <div><div class="as-title">2027 Elections — campaign season open</div>
+          <div class="as-body">14 candidates verified for Eti-Osa. Debate live now. 302 days to election.</div></div>
+        </div>
+        <div class="sec-hd" style="margin-top:4px"><span class="sec-title">Civic overview</span><span class="sec-link" onclick="goTo('s-leaders')">All leaders →</span></div>
+        <div class="qgrid">
+          <div class="qcard" onclick="goTo('s-tax')"><div class="qcard-accent" style="background:var(--ng-green)"></div><div class="qcard-icon">💰</div><div class="qcard-label">Your tax: 2026</div><div class="qcard-val">₦847K paid</div></div>
+          <div class="qcard" onclick="goTo('s-leaders')"><div class="qcard-accent" style="background:var(--gold)"></div><div class="qcard-icon">🏛️</div><div class="qcard-label">LGA Chairman</div><div class="qcard-val">Score: 68/100</div></div>
+          <div class="qcard" onclick="goTo('s-report')"><div class="qcard-accent" style="background:var(--blue)"></div><div class="qcard-icon">📣</div><div class="qcard-label">Active reports</div><div class="qcard-val">11 open issues</div></div>
+          <div class="qcard" onclick="goTo('s-legal')"><div class="qcard-accent" style="background:var(--purple)"></div><div class="qcard-icon">⚖️</div><div class="qcard-label">Know your rights</div><div class="qcard-val">Ask AI any law</div></div>
+        </div>
+        <div class="sec-hd"><span class="sec-title">FAAC — Eti-Osa LGA · March 2026</span></div>
+        <div class="faac-card">
+          <div class="faac-ttl">This month's allocation</div>
+          <div class="faac-row"><span class="faac-label">Federal (FAAC)</span><span class="faac-amt">₦823.4M</span></div>
+          <div class="faac-track"><div class="faac-fill" style="width:74%"></div></div>
+          <div class="faac-row"><span class="faac-label">State (LASG)</span><span class="faac-amt">₦412.1M</span></div>
+          <div class="faac-track"><div class="faac-fill" style="width:37%"></div></div>
+          <div class="faac-row"><span class="faac-label">IGR (Local)</span><span class="faac-amt">₦96.8M</span></div>
+          <div class="faac-track" style="margin-bottom:0"><div class="faac-fill" style="width:9%"></div></div>
+        </div>
+      </div>
+
+      <!-- ════ S4: LEADERS ════ -->
+      <div class="screen" id="s-leaders">
+        <div class="screen-header">
+          <div class="screen-title">Know Your Leaders</div>
+          <div class="screen-sub">Profiles, scorecards & leaderboards — every elected official</div>
+        </div>
+        <div class="ltabs">
+          <button class="ltab active" onclick="switchLeaderTab(this,'lt-lga')">LGA Chairman</button>
+          <button class="ltab" onclick="switchLeaderTab(this,'lt-gov')">Governor</button>
+          <button class="ltab" onclick="switchLeaderTab(this,'lt-senate')">Senate</button>
+          <button class="ltab" onclick="switchLeaderTab(this,'lt-house')">House of Reps</button>
+          <button class="ltab" onclick="switchLeaderTab(this,'lt-ministers')">Ministers</button>
+        </div>
+
+        <!-- LGA -->
+        <div class="ltab-content active" id="lt-lga">
+          <div class="lcard">
+            <div class="lcard-top">
+              <div class="lcard-av">🏛️</div>
+              <div style="flex:1">
+                <div class="lcard-name">Hon. Tunde Adeyemi</div>
+                <div class="lcard-role">Chairman, Eti-Osa LGA · Lagos State · In office 2yr</div>
+                <div class="lcard-contacts">
+                  <div class="contact-btn">📞 0801 234 5678</div>
+                  <div class="contact-btn">✉️ chairman@etiosalga.gov.ng</div>
+                </div>
+              </div>
+            </div>
+            <div class="lcard-meter">
+              <div class="meter-row"><span class="meter-label">Road infrastructure</span><div class="meter-track"><div class="meter-fill" style="width:62%;background:var(--orange)"></div></div><span class="meter-val">62%</span></div>
+              <div class="meter-row"><span class="meter-label">Response to reports</span><div class="meter-track"><div class="meter-fill" style="width:74%;background:var(--ng-green)"></div></div><span class="meter-val">74%</span></div>
+              <div class="meter-row"><span class="meter-label">Budget transparency</span><div class="meter-track"><div class="meter-fill" style="width:55%;background:var(--orange)"></div></div><span class="meter-val">55%</span></div>
+              <div class="meter-row"><span class="meter-label">Security incidents resolved</span><div class="meter-track"><div class="meter-fill" style="width:80%;background:var(--ng-green)"></div></div><span class="meter-val">80%</span></div>
+            </div>
+            <div class="lcard-stats">
+              <div class="lstat"><div class="lstat-val">68%</div><div class="lstat-key">Citizen approval</div></div>
+              <div class="lstat"><div class="lstat-val">14</div><div class="lstat-key">Reports resolved</div></div>
+              <div class="lstat"><div class="lstat-val">#8/20</div><div class="lstat-key">Lagos rank</div></div>
+            </div>
+          </div>
+          <div class="lb">
+            <div class="lb-hd">Lagos LGA Chairman leaderboard · March 2026</div>
+            <div class="lb-row"><div class="lb-rank g1">#1</div><div class="lb-name"><div class="lb-n">Alhaja Kafilat Ogbara</div><div class="lb-area">Kosofe LGA</div></div><div class="lb-score">94%</div></div>
+            <div class="lb-row"><div class="lb-rank g2">#2</div><div class="lb-name"><div class="lb-n">Dr. Akin Bello</div><div class="lb-area">Ikeja LGA</div></div><div class="lb-score">89%</div></div>
+            <div class="lb-row"><div class="lb-rank g3">#3</div><div class="lb-name"><div class="lb-n">Mrs. Folake Adeoye</div><div class="lb-area">Surulere LGA</div></div><div class="lb-score">83%</div></div>
+            <div class="lb-row you"><div class="lb-rank">#8</div><div class="lb-name"><div class="lb-n">Hon. Tunde Adeyemi</div><div class="lb-area">Eti-Osa LGA · your LGA</div></div><div class="lb-score" style="color:var(--gold-l)">68%</div></div>
+          </div>
+        </div>
+
+        <!-- Governor -->
+        <div class="ltab-content" id="lt-gov">
+          <div class="lcard">
+            <div class="lcard-top">
+              <div class="lcard-av">🦁</div>
+              <div style="flex:1">
+                <div class="lcard-name">Gov. Babajide Sanwo-Olu</div>
+                <div class="lcard-role">Governor, Lagos State · 2nd term · Since 2019</div>
+                <div class="lcard-contacts">
+                  <div class="contact-btn">📞 Governor's office</div>
+                  <div class="contact-btn">✉️ governor@lagosstate.gov.ng</div>
+                </div>
+              </div>
+            </div>
+            <div class="lcard-meter">
+              <div class="meter-row"><span class="meter-label">Infrastructure (Blue Rail, roads)</span><div class="meter-track"><div class="meter-fill" style="width:82%;background:var(--ng-green)"></div></div><span class="meter-val">82%</span></div>
+              <div class="meter-row"><span class="meter-label">Education investment</span><div class="meter-track"><div class="meter-fill" style="width:71%;background:var(--ng-green)"></div></div><span class="meter-val">71%</span></div>
+              <div class="meter-row"><span class="meter-label">Health sector</span><div class="meter-track"><div class="meter-fill" style="width:66%;background:var(--orange)"></div></div><span class="meter-val">66%</span></div>
+              <div class="meter-row"><span class="meter-label">Security</span><div class="meter-track"><div class="meter-fill" style="width:75%;background:var(--ng-green)"></div></div><span class="meter-val">75%</span></div>
+            </div>
+            <div class="lcard-stats">
+              <div class="lstat"><div class="lstat-val">81%</div><div class="lstat-key">Approval</div></div>
+              <div class="lstat"><div class="lstat-val">142</div><div class="lstat-key">Projects tracked</div></div>
+              <div class="lstat"><div class="lstat-val">6yr</div><div class="lstat-key">In office</div></div>
+            </div>
+          </div>
+          <div class="lb">
+            <div class="lb-hd">Governor leaderboard · National</div>
+            <div class="lb-row"><div class="lb-rank g1">#1</div><div class="lb-name"><div class="lb-n">Gov. Seyi Makinde</div><div class="lb-area">Oyo State</div></div><div class="lb-score">88%</div></div>
+            <div class="lb-row"><div class="lb-rank g2">#2</div><div class="lb-name"><div class="lb-n">Gov. Babajide Sanwo-Olu</div><div class="lb-area">Lagos State · your state</div></div><div class="lb-score" style="color:var(--gold-l)">81%</div></div>
+            <div class="lb-row"><div class="lb-rank g3">#3</div><div class="lb-name"><div class="lb-n">Gov. Umo Eno</div><div class="lb-area">Akwa Ibom State</div></div><div class="lb-score">79%</div></div>
+          </div>
+        </div>
+
+        <!-- Senate -->
+        <div class="ltab-content" id="lt-senate">
+          <div class="nass-card">
+            <div class="nass-hd">
+              <div class="nass-av">🏛️</div>
+              <div><div class="nass-name">Sen. Tokunbo Abiru</div><div class="nass-role">Senator, Lagos East · APC · 3rd term</div></div>
+            </div>
+            <div class="nass-metrics">
+              <div class="nm"><div class="nm-val">14</div><div class="nm-key">Bills sponsored</div></div>
+              <div class="nm"><div class="nm-val">8</div><div class="nm-key">Bills passed</div></div>
+              <div class="nm"><div class="nm-val">3</div><div class="nm-key">Committees</div></div>
+              <div class="nm"><div class="nm-val">8yr</div><div class="nm-key">Years in NASS</div></div>
+            </div>
+            <div class="nass-attend">
+              <div class="attend-label">Session attendance · 2026</div>
+              <div class="attend-track"><div class="attend-fill" style="width:86%"></div></div>
+              <div class="attend-val">86% — 43 of 50 sessions</div>
+            </div>
+          </div>
+          <div class="nass-card" style="margin-bottom:10px">
+            <div class="nass-hd">
+              <div class="nass-av">🏛️</div>
+              <div><div class="nass-name">Sen. Solomon Adeola</div><div class="nass-role">Senator, Lagos West · APC · 2nd term</div></div>
+            </div>
+            <div class="nass-metrics">
+              <div class="nm"><div class="nm-val">9</div><div class="nm-key">Bills sponsored</div></div>
+              <div class="nm"><div class="nm-val">5</div><div class="nm-key">Bills passed</div></div>
+              <div class="nm"><div class="nm-val">4</div><div class="nm-key">Committees</div></div>
+              <div class="nm"><div class="nm-val">5yr</div><div class="nm-key">Years in NASS</div></div>
+            </div>
+            <div class="nass-attend">
+              <div class="attend-label">Session attendance · 2026</div>
+              <div class="attend-track"><div class="attend-fill" style="width:72%"></div></div>
+              <div class="attend-val">72% — 36 of 50 sessions</div>
+            </div>
+          </div>
+          <div class="lb">
+            <div class="lb-hd">Senate leaderboard — most active 2026</div>
+            <div class="lb-row"><div class="lb-rank g1">#1</div><div class="lb-name"><div class="lb-n">Sen. Ireti Kingibe</div><div class="lb-area">Abuja · 19 bills sponsored</div></div><div class="lb-score">97%</div></div>
+            <div class="lb-row"><div class="lb-rank g2">#2</div><div class="lb-name"><div class="lb-n">Sen. Tokunbo Abiru</div><div class="lb-area">Lagos East · your senator</div></div><div class="lb-score" style="color:var(--gold-l)">86%</div></div>
+          </div>
+        </div>
+
+        <!-- House of Reps -->
+        <div class="ltab-content" id="lt-house">
+          <div class="nass-card">
+            <div class="nass-hd">
+              <div class="nass-av">⚖️</div>
+              <div><div class="nass-name">Hon. Babatunde Hunpe</div><div class="nass-role">House of Reps · Eti-Osa Fed. Const. · APC</div></div>
+            </div>
+            <div class="nass-metrics">
+              <div class="nm"><div class="nm-val">6</div><div class="nm-key">Bills sponsored</div></div>
+              <div class="nm"><div class="nm-val">3</div><div class="nm-key">Bills passed</div></div>
+              <div class="nm"><div class="nm-val">2</div><div class="nm-key">Committees</div></div>
+              <div class="nm"><div class="nm-val">2yr</div><div class="nm-key">In NASS</div></div>
+            </div>
+            <div class="nass-attend">
+              <div class="attend-label">Session attendance · 2026</div>
+              <div class="attend-track"><div class="attend-fill" style="width:61%"></div></div>
+              <div class="attend-val">61% — 30 of 50 sessions ⚠️ Below average</div>
+            </div>
+          </div>
+          <div class="lb">
+            <div class="lb-hd">House of Reps — Lagos · most active</div>
+            <div class="lb-row"><div class="lb-rank g1">#1</div><div class="lb-name"><div class="lb-n">Hon. Ghali Umar</div><div class="lb-area">Shomolu/Bariga · 18 bills</div></div><div class="lb-score">94%</div></div>
+            <div class="lb-row"><div class="lb-rank g2">#2</div><div class="lb-name"><div class="lb-n">Hon. Ibrahim Obanikoro</div><div class="lb-area">Ikorodu · 12 bills</div></div><div class="lb-score">88%</div></div>
+            <div class="lb-row"><div class="lb-rank">#11</div><div class="lb-name"><div class="lb-n">Hon. Babatunde Hunpe</div><div class="lb-area">Eti-Osa · your rep</div></div><div class="lb-score" style="color:var(--orange)">61%</div></div>
+          </div>
+        </div>
+
+        <!-- Ministers -->
+        <div class="ltab-content" id="lt-ministers">
+          <div class="lcard">
+            <div class="lcard-top">
+              <div class="lcard-av">🤝</div>
+              <div style="flex:1">
+                <div class="lcard-name">Wale Edun</div>
+                <div class="lcard-role">Minister of Finance · Appointed 2023</div>
+                <div class="lcard-contacts">
+                  <div class="contact-btn">✉️ Contact ministry</div>
+                </div>
+              </div>
+            </div>
+            <div class="lcard-stats">
+              <div class="lstat"><div class="lstat-val">72%</div><div class="lstat-key">Approval</div></div>
+              <div class="lstat"><div class="lstat-val">5</div><div class="lstat-key">Policies passed</div></div>
+              <div class="lstat"><div class="lstat-val">2yr</div><div class="lstat-key">In office</div></div>
+            </div>
+          </div>
+          <div class="lcard">
+            <div class="lcard-top">
+              <div class="lcard-av">📚</div>
+              <div style="flex:1">
+                <div class="lcard-name">Prof. Tahir Mamman</div>
+                <div class="lcard-role">Minister of Education · Appointed 2023</div>
+                <div class="lcard-contacts">
+                  <div class="contact-btn">✉️ Contact ministry</div>
+                </div>
+              </div>
+            </div>
+            <div class="lcard-stats">
+              <div class="lstat"><div class="lstat-val">58%</div><div class="lstat-key">Approval</div></div>
+              <div class="lstat"><div class="lstat-val">3</div><div class="lstat-key">Policies passed</div></div>
+              <div class="lstat"><div class="lstat-val">2yr</div><div class="lstat-key">In office</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ S5: REPORTING ════ -->
+      <div class="screen" id="s-report">
+        <div class="screen-header">
+          <div class="screen-title">Citizen Reporting</div>
+          <div class="screen-sub">Report issues directly to your officials. Anonymously if needed.</div>
+        </div>
+        <div class="rcat-grid">
+          <div class="rcat"><div class="rcat-icon">🚧</div><div class="rcat-label">Bad roads</div><div class="rcat-count">47 this month</div></div>
+          <div class="rcat"><div class="rcat-icon">🚨</div><div class="rcat-label">Security</div><div class="rcat-count">12 this month</div></div>
+          <div class="rcat"><div class="rcat-icon">💡</div><div class="rcat-label">Power / NEPA</div><div class="rcat-count">89 this month</div></div>
+          <div class="rcat positive"><div class="rcat-icon">👏</div><div class="rcat-label">What's working</div><div class="rcat-count">23 recognitions</div></div>
+          <div class="rcat"><div class="rcat-icon">💧</div><div class="rcat-label">Water supply</div><div class="rcat-count">18 this month</div></div>
+          <div class="rcat whistle" onclick="goTo('s-report')" style="cursor:pointer">
+            <div class="rcat-icon">🔒</div>
+            <div class="rcat-label" style="color:var(--purple)">Whistleblower</div>
+            <div class="rcat-count" style="color:rgba(159,122,234,.6)">Encrypted · Anonymous</div>
+          </div>
+        </div>
+        <!-- Form -->
+        <div class="rform" id="rform">
+          <div class="rform-title">New report — Eti-Osa LGA</div>
+          <div class="fgroup"><label class="fi">Category</label><div class="selwrap"><select class="fselect"><option>Bad roads / infrastructure</option><option>Security incident</option><option>Power failure</option><option>What's working ✓</option><option>Environmental hazard</option></select></div></div>
+          <textarea class="ftextarea" placeholder="Describe clearly. Your GPS location is attached automatically. Reports go straight to the relevant official."></textarea>
+          <div class="media-row">
+            <button class="mbtn">📷 Photo</button>
+            <button class="mbtn">🎥 Video</button>
+            <button class="mbtn">🎤 Voice</button>
+          </div>
+          <button class="btn-p" style="margin:0" onclick="submitReport()">Submit report →</button>
+        </div>
+        <!-- Success state -->
+        <div class="success-state" id="success-state">
+          <div class="success-icon">✅</div>
+          <div class="success-title">Report submitted successfully</div>
+          <div class="success-ref">Ref: ETI-2026-0848</div>
+          <div class="success-body">Your report has been sent to <strong style="color:var(--t1)">Hon. Tunde Adeyemi's office</strong> and flagged to the Lagos State Works Department.<br><br>42 other citizens have reported similar issues in Eti-Osa. <span style="color:var(--ng-green-l)">View all →</span></div>
+          <button class="btn-s" style="margin-top:14px" onclick="resetReport()">Submit another report</button>
+        </div>
+        <!-- Feed -->
+        <div class="sec-hd" style="padding:0 18px"><span class="sec-title">Recent reports near you</span></div>
+        <div style="margin:8px 0">
+          <div class="ri"><div class="ri-dot pend"></div><div style="flex:1"><div class="ri-title">Pothole on Lekki-Epe Expressway</div><div class="ri-meta">You · 3 days ago · 42 upvotes</div></div><span class="pill pill-o">Pending</span></div>
+          <div class="ri"><div class="ri-dot res"></div><div style="flex:1"><div class="ri-title">Broken streetlights — Admiralty Way</div><div class="ri-meta">Community · 2 weeks ago · 118 upvotes</div></div><span class="pill pill-g">Resolved</span></div>
+          <div class="ri"><div class="ri-dot act"></div><div style="flex:1"><div class="ri-title">Illegal waste dump — Chevron Drive</div><div class="ri-meta">Anonymous · 1 week ago · 67 upvotes</div></div><span class="pill pill-b">In progress</span></div>
+          <div class="ri"><div class="ri-dot res"></div><div style="flex:1"><div class="ri-title">New park opened — Adeola Odeku</div><div class="ri-meta">Community · positive report · 94 likes</div></div><span class="pill pill-g">Noted ✓</span></div>
+        </div>
+      </div>
+
+      <!-- ════ S6: ELECTIONS ════ -->
+      <div class="screen" id="s-elections">
+        <div class="elec-hero">
+          <div class="elec-flag">🇳🇬</div>
+          <div class="elec-title">Nigeria 2027 General Elections</div>
+          <div class="elec-sub">Know every candidate. Score them yourself. Make an informed vote.</div>
+          <div class="cd-row">
+            <div class="cd-blk"><div class="cd-num" id="el-days">302</div><div class="cd-lbl">Days</div></div>
+            <div class="cd-blk"><div class="cd-num">14</div><div class="cd-lbl">Hours</div></div>
+            <div class="cd-blk"><div class="cd-num">37</div><div class="cd-lbl">Mins</div></div>
+          </div>
+        </div>
+        <!-- Live Debate -->
+        <div class="debate-card">
+          <div class="debate-live-badge"><div class="live-dot"></div>Live now</div>
+          <div class="debate-title">Eti-Osa LGA Chairman Debate</div>
+          <div class="debate-meta">AI-moderated · 4 candidates · 2,847 watching</div>
+          <div class="debate-cands">
+            <div class="dc mic-active"><div class="dc-av">🤝</div><div class="dc-name">A. Fashola</div><div class="dc-party">APC · Speaking</div></div>
+            <div class="dc mic-muted"><div class="dc-av">🌟</div><div class="dc-name">C. Okafor</div><div class="dc-party">PDP · Muted</div></div>
+            <div class="dc mic-muted"><div class="dc-av">✊</div><div class="dc-name">I. Bello</div><div class="dc-party">LP · Muted</div></div>
+            <div class="dc mic-muted"><div class="dc-av">🎯</div><div class="dc-name">F. Adeyemi</div><div class="dc-party">NNPP · Muted</div></div>
+          </div>
+          <div class="ai-mod">
+            <span class="ai-mod-icon">🤖</span>
+            <span class="ai-mod-text"><strong>Citizen AI Moderator:</strong> "Candidate A, your time is 90 seconds. Please address the road infrastructure question."</span>
+          </div>
+          <div class="qinput">
+            <input placeholder="Submit your question to the debate…">
+            <button>Send</button>
+          </div>
+        </div>
+        <!-- Vote aggregation -->
+        <div class="sec-hd"><span class="sec-title">Live vote aggregation</span><span class="sec-link">774 LGAs →</span></div>
+        <div class="vote-hero">
+          <div class="vh-title">Presidential results — unofficial parallel count</div>
+          <div class="vh-sub">Party agents reporting at polling units · 142 of 774 LGAs reporting</div>
+          <div class="vote-progress">
+            <div class="vp-label2">APC — Tinubu</div>
+            <div class="vp-row"><span class="vp-label">38.4% · 4,218,041 votes</span><span class="vp-pct">38.4%</span></div>
+            <div class="vp-track"><div class="vp-fill apc-col" style="width:38.4%"></div></div>
+          </div>
+          <div class="vote-progress">
+            <div class="vp-label2">PDP — Atiku</div>
+            <div class="vp-row"><span class="vp-label">29.1% · 3,194,822 votes</span><span class="vp-pct">29.1%</span></div>
+            <div class="vp-track"><div class="vp-fill pdp-col" style="width:29.1%"></div></div>
+          </div>
+          <div class="vote-progress">
+            <div class="vp-label2">LP — Obi</div>
+            <div class="vp-row"><span class="vp-label">25.2% · 2,767,400 votes</span><span class="vp-pct">25.2%</span></div>
+            <div class="vp-track"><div class="vp-fill lp-col" style="width:25.2%"></div></div>
+          </div>
+          <div class="pu-input" style="margin-top:10px">
+            <span class="pu-label">Enter results for your polling unit</span>
+            <span class="pu-status">Agent login →</span>
+          </div>
+        </div>
+        <!-- KYC -->
+        <div class="sec-hd"><span class="sec-title">Know your candidate</span><span class="sec-link">14 verified →</span></div>
+        <div class="kyc">
+          <div class="kyc-top">
+            <div class="kyc-av" style="background:linear-gradient(135deg,#0c2a4a,#1a5080)">🤝</div>
+            <div>
+              <div class="kyc-party apc">APC</div>
+              <div class="kyc-name">Engr. Babatunde Fashola</div>
+              <div class="kyc-seat">Presidency · Federal Republic of Nigeria</div>
+            </div>
+          </div>
+          <div class="kyc-checks">
+            <div class="kc-row"><span class="kc-label">Transparency score</span><span class="kc-stars">★★★★☆</span></div>
+            <div class="kc-row"><span class="kc-label">Corruption allegations</span><span class="kc-ok">✓ None verified</span></div>
+            <div class="kc-row"><span class="kc-label">Legal record</span><span class="kc-ok">✓ Clear</span></div>
+            <div class="kc-row"><span class="kc-label">Education</span><span class="kc-ok">✓ BEng, LLB</span></div>
+          </div>
+          <div class="kyc-rate">
+            <div class="kyc-rate-lbl">Rate this candidate yourself</div>
+            <div class="rate-metrics">
+              <div class="rm-row"><span class="rm-label">Leadership</span><div class="rm-stars"><span class="rm-star" onclick="rateStar(this,0)">★</span><span class="rm-star" onclick="rateStar(this,1)">★</span><span class="rm-star" onclick="rateStar(this,2)">★</span><span class="rm-star" onclick="rateStar(this,3)">★</span><span class="rm-star" onclick="rateStar(this,4)">★</span></div></div>
+              <div class="rm-row"><span class="rm-label">Integrity</span><div class="rm-stars"><span class="rm-star" onclick="rateStar(this,0)">★</span><span class="rm-star" onclick="rateStar(this,1)">★</span><span class="rm-star" onclick="rateStar(this,2)">★</span><span class="rm-star" onclick="rateStar(this,3)">★</span><span class="rm-star" onclick="rateStar(this,4)">★</span></div></div>
+              <div class="rm-row"><span class="rm-label">Track record</span><div class="rm-stars"><span class="rm-star" onclick="rateStar(this,0)">★</span><span class="rm-star" onclick="rateStar(this,1)">★</span><span class="rm-star" onclick="rateStar(this,2)">★</span><span class="rm-star" onclick="rateStar(this,3)">★</span><span class="rm-star" onclick="rateStar(this,4)">★</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ S7: TAX DASHBOARD ════ -->
+      <div class="screen" id="s-tax">
+        <div class="screen-header">
+          <div class="screen-title">Your Tax Dashboard</div>
+          <div class="screen-sub">Every naira you've paid. Where it went. And what you can demand in return.</div>
+        </div>
+        <div class="tax-period-toggle">
+          <button class="tpt" onclick="switchPeriod(this,'MTD')">This month</button>
+          <button class="tpt active" onclick="switchPeriod(this,'YTD')">YTD 2026</button>
+          <button class="tpt" onclick="switchPeriod(this,'LY')">2025</button>
+          <button class="tpt" onclick="switchPeriod(this,'ALL')">All time</button>
+        </div>
+        <div class="tax-hero">
+          <div class="tax-label" id="tax-period-label">Total tax paid · Jan–Mar 2026</div>
+          <div class="tax-total" id="tax-total-val">₦847,200</div>
+          <div class="tax-tin">TIN: 1234-5678-NG · Lanre Ojutalayo</div>
+          <div class="tax-segs">
+            <div class="tseg"><div class="tseg-val" id="ts-paye">₦612K</div><div class="tseg-key">PAYE</div></div>
+            <div class="tseg"><div class="tseg-val" id="ts-gig">₦185K</div><div class="tseg-key">Freedom gigs</div></div>
+            <div class="tseg"><div class="tseg-val" id="ts-vat">₦50K</div><div class="tseg-key">VAT</div></div>
+          </div>
+        </div>
+        <!-- IGR ranking -->
+        <div class="igr-card">
+          <div class="igr-icon">🏆</div>
+          <div class="igr-text">
+            <div class="igr-title">Top 12% of taxpayers in Eti-Osa LGA</div>
+            <div class="igr-sub">Your ₦847K contribution ranks you #1,420 of 11,840 registered taxpayers in Eti-Osa. You have every right to demand results.</div>
+          </div>
+          <div class="igr-rank">#1.4K</div>
+        </div>
+        <!-- Freedom linkage -->
+        <div class="fl-card">
+          <div class="fl-icon">⚡</div>
+          <div class="fl-text">
+            <div class="fl-title">Freedom tax linkage active</div>
+            <div class="fl-body">₦185K in taxes from 34 Freedom gigs included above. All tracked automatically.</div>
+          </div>
+          <div class="fl-arr">→</div>
+        </div>
+        <!-- Transaction ledger -->
+        <div class="sec-hd"><span class="sec-title">Tax payment ledger</span><span class="sec-link">See all →</span></div>
+        <div class="ledger">
+          <div class="ledger-hd">Recent payments — tap for full receipt</div>
+          <div class="tx-row" onclick="openReceipt()">
+            <div class="tx-icon paye">💼</div>
+            <div class="tx-body"><div class="tx-title">PAYE — March 2026</div><div class="tx-sub">Employer deduction · Lagos State + Federal</div></div>
+            <div class="tx-right"><div class="tx-amt">₦51,200</div><div class="tx-date">31 Mar 2026</div></div>
+          </div>
+          <div class="tx-row" onclick="openReceipt()">
+            <div class="tx-icon gig">⚡</div>
+            <div class="tx-body"><div class="tx-title">Freedom gig tax — plumbing job #34</div><div class="tx-sub">Gig economy levy · 5% of ₦24,000</div></div>
+            <div class="tx-right"><div class="tx-amt">₦1,200</div><div class="tx-date">28 Mar 2026</div></div>
+          </div>
+          <div class="tx-row" onclick="openReceipt()">
+            <div class="tx-icon gig">⚡</div>
+            <div class="tx-body"><div class="tx-title">Freedom gig tax — electrical job #33</div><div class="tx-sub">Gig economy levy · 5% of ₦18,000</div></div>
+            <div class="tx-right"><div class="tx-amt">₦900</div><div class="tx-date">25 Mar 2026</div></div>
+          </div>
+          <div class="tx-row" onclick="openReceipt()">
+            <div class="tx-icon vat">🧾</div>
+            <div class="tx-body"><div class="tx-title">VAT — March purchases</div><div class="tx-sub">Aggregated VAT on platform transactions</div></div>
+            <div class="tx-right"><div class="tx-amt">₦4,200</div><div class="tx-date">31 Mar 2026</div></div>
+          </div>
+          <div class="tx-row" onclick="openReceipt()">
+            <div class="tx-icon paye">💼</div>
+            <div class="tx-body"><div class="tx-title">PAYE — February 2026</div><div class="tx-sub">Employer deduction · Lagos State + Federal</div></div>
+            <div class="tx-right"><div class="tx-amt">₦51,200</div><div class="tx-date">28 Feb 2026</div></div>
+          </div>
+        </div>
+        <!-- Destination bars -->
+        <div class="dest-card">
+          <div class="dest-hd">Where your taxes go</div>
+          <div class="dest-row"><div class="dest-top"><span class="dest-label">Lagos State Government</span><span class="dest-amt">₦423K</span></div><div class="dest-track"><div class="dest-fill" style="width:75%"></div></div></div>
+          <div class="dest-row"><div class="dest-top"><span class="dest-label">Federal Government</span><span class="dest-amt">₦312K</span></div><div class="dest-track"><div class="dest-fill" style="width:55%"></div></div></div>
+          <div class="dest-row"><div class="dest-top"><span class="dest-label">Eti-Osa LGA</span><span class="dest-amt">₦112K</span></div><div class="dest-track"><div class="dest-fill" style="width:20%"></div></div></div>
+        </div>
+        <div class="acct-prompt">
+          <div class="ap-text">💡 You paid <strong style="color:var(--t1)">₦112K</strong> to Eti-Osa LGA this year. The LGA received <strong style="color:var(--t1)">₦823.4M</strong> from FAAC in March alone. As a taxpayer, you have the right to a full account. <span class="ap-link" onclick="goTo('s-home')">Ask Citizen what it was spent on →</span></div>
+        </div>
+      </div>
+
+      <!-- ════ S8: LEGAL RIGHTS ════ -->
+      <div class="screen" id="s-legal">
+        <div class="screen-header">
+          <div class="screen-title">Know Your Rights</div>
+          <div class="screen-sub">Ask Citizen any question about Nigerian law. AI answers instantly.</div>
+        </div>
+        <!-- Sample AI response — police phone search -->
+        <div class="legal-voice" style="margin:0 18px 14px">
+          <div class="lv-q">"I am stopped by a police officer. He says he wants to look through my personal mobile phone. What does the law say?"</div>
+          <div class="lv-response">
+            <div class="lv-ai">🤖</div>
+            <div>
+              <div class="lv-answer">Under the <em>Nigeria Police Act 2020 (Section 84)</em> and the <em>Cybercrime Act 2015</em>, a police officer <em>cannot search your personal mobile phone without a court warrant</em> — unless you are under lawful arrest and the search is incidental to that arrest.<br><br>You have the right to:<br>• <em>Refuse access</em> to your device politely but firmly<br>• Ask for the officer's name, badge number, and reason for the stop<br>• Request that any search be conducted only with a warrant<br><br>If the officer insists unlawfully, <em>do not resist physically</em>. Record the officer's details and report to IPOB or your nearest court.</div>
+              <div class="lv-citation">Sources: Police Act 2020 §84 · ECOWAS Charter Art.6 · Cybercrime Act 2015 §38 · Updated March 2026</div>
+            </div>
+          </div>
+        </div>
+        <div class="sec-hd"><span class="sec-title">Browse by rights category</span></div>
+        <div class="rights-cats">
+          <div class="rcat2"><div class="rcat2-icon">🚔</div><div class="rcat2-label">Police & arrest</div><div class="rcat2-sub">Your rights when stopped</div></div>
+          <div class="rcat2"><div class="rcat2-icon">🏠</div><div class="rcat2-label">Housing & land</div><div class="rcat2-sub">Tenancy, eviction, land</div></div>
+          <div class="rcat2"><div class="rcat2-icon">🗳️</div><div class="rcat2-label">Voting rights</div><div class="rcat2-sub">Registration, electoral</div></div>
+          <div class="rcat2"><div class="rcat2-icon">💼</div><div class="rcat2-label">Labour rights</div><div class="rcat2-sub">Employment, dismissal</div></div>
+          <div class="rcat2"><div class="rcat2-icon">📜</div><div class="rcat2-label">Constitution</div><div class="rcat2-sub">Fundamental rights</div></div>
+          <div class="rcat2"><div class="rcat2-icon">🏛️</div><div class="rcat2-label">Government access</div><div class="rcat2-sub">FOI, public records</div></div>
+        </div>
+        <div class="sec-hd"><span class="sec-title">Popular legal questions</span></div>
+        <div class="popular-q">
+          <div class="pq-row"><div class="pq-icon">🚔</div><div class="pq-text">Can police detain me without charge for more than 24 hours?</div><div class="pq-arr">→</div></div>
+          <div class="pq-row"><div class="pq-icon">🏠</div><div class="pq-text">My landlord wants to evict me without notice. What can I do?</div><div class="pq-arr">→</div></div>
+          <div class="pq-row"><div class="pq-icon">💼</div><div class="pq-text">I was dismissed without notice or severance. Is this legal?</div><div class="pq-arr">→</div></div>
+          <div class="pq-row"><div class="pq-icon">📋</div><div class="pq-text">How do I access government documents under FOI Act?</div><div class="pq-arr">→</div></div>
+          <div class="pq-row"><div class="pq-icon">💰</div><div class="pq-text">How do I renew my passport / driver's licence?</div><div class="pq-arr">→</div></div>
+        </div>
+      </div>
+
+      <!-- ════ S9: BUDGET ANALYSIS ════ -->
+      <div class="screen" id="s-budget">
+        <div class="screen-header">
+          <div class="screen-title">Budget Analysis</div>
+          <div class="screen-sub">Nigeria's national budget — plain language, sector breakdown, global comparison.</div>
+        </div>
+        <div style="padding:0 18px;margin-bottom:12px">
+          <div class="budget-year-toggle">
+            <button class="byt" onclick="switchBudget(this,'2024')">2024</button>
+            <button class="byt active" onclick="switchBudget(this,'2025')">2025</button>
+            <button class="byt" onclick="switchBudget(this,'2026')">2026</button>
+          </div>
+        </div>
+        <div class="budget-total-card">
+          <div class="btc-label">Federal Budget 2025</div>
+          <div class="btc-val" id="budget-val">₦47.9 Trillion</div>
+          <div class="btc-change" id="budget-change">▲ 31.4% vs 2024 (₦36.5T)</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:5px">Approved by NASS · January 2025 · Debt service: 35% of revenue</div>
+        </div>
+        <div class="sector-breakdown">
+          <div class="sb-hd">Sector allocation breakdown</div>
+          <div class="sb-row"><div class="sb-color" style="background:var(--red)"></div><div class="sb-label">Debt servicing</div><div class="sb-bar-wrap"><div class="sb-bar" style="width:42%;background:var(--red)"></div></div><div class="sb-pct">42.5%</div></div>
+          <div class="sb-row"><div class="sb-color" style="background:var(--blue)"></div><div class="sb-label">Defence & security</div><div class="sb-bar-wrap"><div class="sb-bar" style="width:12%;background:var(--blue)"></div></div><div class="sb-pct">12.1%</div></div>
+          <div class="sb-row"><div class="sb-color" style="background:var(--ng-green)"></div><div class="sb-label">Infrastructure</div><div class="sb-bar-wrap"><div class="sb-bar" style="width:10%;background:var(--ng-green)"></div></div><div class="sb-pct">10.3%</div></div>
+          <div class="sb-row"><div class="sb-color" style="background:var(--orange)"></div><div class="sb-label">Education</div><div class="sb-bar-wrap"><div class="sb-bar" style="width:8%;background:var(--orange)"></div></div><div class="sb-pct">7.9%</div></div>
+          <div class="sb-row"><div class="sb-color" style="background:var(--purple)"></div><div class="sb-label">Health</div><div class="sb-bar-wrap"><div class="sb-bar" style="width:5%;background:var(--purple)"></div></div><div class="sb-pct">5.2%</div></div>
+          <div class="sb-row"><div class="sb-color" style="background:var(--t3)"></div><div class="sb-label">All other sectors</div><div class="sb-bar-wrap"><div class="sb-bar" style="width:22%;background:var(--t3)"></div></div><div class="sb-pct">22.0%</div></div>
+        </div>
+        <div class="global-compare">
+          <div class="gc-title">Education spend vs global peers (% of budget)</div>
+          <div class="gc-row"><div class="gc-flag">🇿🇦</div><div class="gc-country">South Africa</div><div class="gc-track"><div class="gc-fill" style="width:70%"></div></div><div class="gc-pct">21.0%</div></div>
+          <div class="gc-row"><div class="gc-flag">🇰🇪</div><div class="gc-country">Kenya</div><div class="gc-track"><div class="gc-fill" style="width:60%"></div></div><div class="gc-pct">18.2%</div></div>
+          <div class="gc-row"><div class="gc-flag">🇬🇭</div><div class="gc-country">Ghana</div><div class="gc-track"><div class="gc-fill" style="width:45%"></div></div><div class="gc-pct">13.7%</div></div>
+          <div class="gc-row"><div class="gc-flag">🇳🇬</div><div class="gc-country" style="color:var(--ng-green-l);font-weight:500">Nigeria (2025)</div><div class="gc-track"><div class="gc-fill highlight" style="width:26%"></div></div><div class="gc-pct" style="color:var(--ng-green-l)">7.9%</div></div>
+          <div style="font-size:11px;color:var(--t3);margin-top:8px">⚠️ Nigeria spends less than half the African average on education as % of budget</div>
+        </div>
+      </div>
+
+      <!-- ════ S10: CIVICIQ ════ -->
+      <div class="screen" id="s-game">
+        <div class="game-hero">
+          <div class="game-title">🏆 CivicIQ</div>
+          <div class="game-sub">Test your knowledge. Climb to the top. Win the championship.</div>
+          <div class="rank-pill"><span class="rp-label">Your rank</span><span class="rp-num">#47</span><span class="rp-total">of 12,840 in Eti-Osa</span></div>
+        </div>
+        <!-- Points tracker -->
+        <div class="pts-card">
+          <div class="pts-icon">⭐</div>
+          <div class="pts-body">
+            <div class="pts-title">Monthly points — 1,840 / 5,000 to championship</div>
+            <div class="pts-track"><div class="pts-fill" style="width:36.8%"></div></div>
+            <div class="pts-sub">Quiz answers +10 · Reports filed +25 · Votes cast +15 · Leader rated +5</div>
+          </div>
+          <div class="pts-val">1,840</div>
+        </div>
+        <!-- Monthly game show teaser -->
+        <div class="gameshow-card">
+          <div class="gs-badge">🎙️ Live championship</div>
+          <div class="gs-title">CivicIQ Monthly Championship</div>
+          <div class="gs-sub">Top 5 from Eti-Osa compete live · AI-moderated · Win ₦50,000 prize + Most Engaged Citizen title</div>
+          <div class="gs-finalists">
+            <div class="gsf"><div class="gsf-av">👩</div><div class="gsf-name">Adaeze</div></div>
+            <div class="gsf-vs">vs</div>
+            <div class="gsf"><div class="gsf-av">👨</div><div class="gsf-name">Ibrahim</div></div>
+            <div class="gsf-vs">vs</div>
+            <div class="gsf"><div class="gsf-av">👩</div><div class="gsf-name">Chidinma</div></div>
+            <div class="gsf-vs">vs</div>
+            <div class="gsf"><div class="gsf-av">👨</div><div class="gsf-name">Emeka</div></div>
+          </div>
+          <button class="btn-p" style="margin:0;font-size:13px;padding:12px">Watch live · Sunday April 6 · 8PM</button>
+        </div>
+        <!-- Topic categories -->
+        <div class="topic-cats">
+          <button class="tcat active" onclick="switchTopic(this)">All topics</button>
+          <button class="tcat" onclick="switchTopic(this)">Governance</button>
+          <button class="tcat" onclick="switchTopic(this)">Budget</button>
+          <button class="tcat" onclick="switchTopic(this)">Elections</button>
+          <button class="tcat" onclick="switchTopic(this)">History</button>
+          <button class="tcat" onclick="switchTopic(this)">NASS</button>
+          <button class="tcat" onclick="switchTopic(this)">Constitution</button>
+        </div>
+        <!-- Quiz -->
+        <div class="quiz-card">
+          <div class="quiz-tag-pill">📜 Constitutional law</div>
+          <div class="quiz-q">Under the 1999 Constitution, which agency conducts federal elections in Nigeria?</div>
+          <div class="quiz-opts">
+            <button class="qopt" onclick="markAnswer(this,false)">A. Federal Electoral Board (FEB)</button>
+            <button class="qopt" onclick="markAnswer(this,true)">B. Independent National Electoral Commission (INEC)</button>
+            <button class="qopt" onclick="markAnswer(this,false)">C. National Assembly Committee on Elections</button>
+            <button class="qopt" onclick="markAnswer(this,false)">D. Ministry of Justice</button>
+          </div>
+          <div class="quiz-result" id="qresult">✓ <em>Correct!</em> INEC is established under Section 153 of the 1999 Constitution. Its Chairman is appointed by the President subject to Senate confirmation. +10 points added to your CivicIQ.</div>
+        </div>
+        <!-- Leaderboard -->
+        <div class="glb">
+          <div class="glb-hd"><span>Eti-Osa LGA · March 2026</span><span style="color:var(--gold-l)">Monthly</span></div>
+          <div class="glb-row"><div class="glb-pos">🥇</div><div class="glb-name">Adaeze Okafor</div><div class="glb-pts">4,820</div><div class="glb-badge">👑</div></div>
+          <div class="glb-row"><div class="glb-pos">🥈</div><div class="glb-name">Ibrahim Al-Hassan</div><div class="glb-pts">4,611</div><div class="glb-badge">⭐</div></div>
+          <div class="glb-row"><div class="glb-pos">🥉</div><div class="glb-name">Chidinma Eze</div><div class="glb-pts">4,239</div><div class="glb-badge">⭐</div></div>
+          <div class="glb-row you"><div class="glb-pos">#47</div><div class="glb-name">Lanre Ojutalayo 👈</div><div class="glb-pts">1,840</div><div class="glb-badge">🎯</div></div>
+        </div>
+      </div>
+
+      <!-- ════ S11: MORE ════ -->
+      <div class="screen" id="s-more">
+        <div class="screen-title">More</div>
+        <div class="screen-sub" style="margin-bottom:20px">All Citizen features</div>
+        <div class="more-grid">
+          <div class="more-card" onclick="goTo('s-tax')"><div class="mc-icon">💰</div><div class="mc-label">Tax Dashboard</div><div class="mc-sub">Your payments, ledger, IGR rank</div></div>
+          <div class="more-card" onclick="goTo('s-legal')"><div class="mc-icon">⚖️</div><div class="mc-label">Know Your Rights</div><div class="mc-sub">AI legal guide for every citizen</div><div class="mc-new">NEW</div></div>
+          <div class="more-card" onclick="goTo('s-budget')"><div class="mc-icon">📊</div><div class="mc-label">Budget Analysis</div><div class="mc-sub">National budget in plain English</div><div class="mc-new">NEW</div></div>
+          <div class="more-card" onclick="goTo('s-game')"><div class="mc-icon">🏆</div><div class="mc-label">CivicIQ</div><div class="mc-sub">Quiz, leaderboard, championship</div></div>
+          <div class="more-card"><div class="mc-icon">📜</div><div class="mc-label">History Bank</div><div class="mc-sub">AI-narrated Nigerian history by LGA</div><div class="mc-new">Coming</div></div>
+          <div class="more-card"><div class="mc-icon">✈️</div><div class="mc-label">Visitor Mode</div><div class="mc-sub">Explore any state as a tourist</div><div class="mc-new">Coming</div></div>
+        </div>
+        <div class="version-note">
+          <strong>Citizen NG v2</strong> · by Dignity<br>
+          Prototype · All features for illustration only<br>
+          IP of Lanre Ojutalayo · MIT Sloan 2026
+        </div>
+      </div>
+
+    </div><!-- /screens -->
+
+    <!-- Bottom Nav -->
+    <div class="bnav" id="bnav" style="display:none">
+      <button class="ni active" onclick="navTo('s-home',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span class="ni-label">Home</span><div class="ni-dot"></div>
+      </button>
+      <button class="ni" onclick="navTo('s-leaders',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span class="ni-label">Leaders</span><div class="ni-dot"></div>
+      </button>
+      <button class="ni" onclick="navTo('s-elections',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span class="ni-label">Elections</span><div class="ni-dot"></div>
+      </button>
+      <button class="ni" onclick="navTo('s-report',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span class="ni-label">Report</span><div class="ni-dot"></div>
+      </button>
+      <button class="ni" onclick="navTo('s-more',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        <span class="ni-label">More</span><div class="ni-dot"></div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="sb-title">Citizen NG<br>Prototype v2</div>
+  <div class="sb-sub">Full rebuild — all self-review issues addressed. 11 screens. Tap any element to explore.</div>
+  <div class="sb-badge">✓ 14 issues fixed from v1 self-review</div>
+  <div class="snav">
+    <button class="sbtn active" id="btn-s-splash" onclick="goTo('s-splash')"><div class="sbtn-num">1</div><div class="sbtn-text"><div class="sbtn-label">Splash</div><div class="sbtn-desc">Stronger tagline · Freedom SSO entry</div></div></button>
+    <button class="sbtn" id="btn-s-onboard" onclick="goTo('s-onboard')"><div class="sbtn-num">2</div><div class="sbtn-text"><div class="sbtn-label">Onboarding — 3 steps</div><div class="sbtn-desc">TIN field · Select All languages fixed</div></div></button>
+    <button class="sbtn" id="btn-s-home" onclick="goTo('s-home')"><div class="sbtn-num">3</div><div class="sbtn-text"><div class="sbtn-label">Home — GPS dashboard</div><div class="sbtn-desc">Voice AI active · push notification sim</div></div></button>
+    <button class="sbtn" id="btn-s-leaders" onclick="goTo('s-leaders')"><div class="sbtn-num">4</div><div class="sbtn-text"><div class="sbtn-label">Know Your Leaders</div><div class="sbtn-desc">All 5 tabs working · NASS scorecard · contacts</div></div></button>
+    <button class="sbtn" id="btn-s-report" onclick="goTo('s-report')"><div class="sbtn-num">5</div><div class="sbtn-text"><div class="sbtn-label">Citizen Reporting</div><div class="sbtn-desc">Whistleblower · success state · positive tile</div></div></button>
+    <button class="sbtn" id="btn-s-elections" onclick="goTo('s-elections')"><div class="sbtn-num">6</div><div class="sbtn-text"><div class="sbtn-label">Elections 2027</div><div class="sbtn-desc">Debate UI · vote agg · citizen KYC rating</div></div></button>
+    <button class="sbtn" id="btn-s-tax" onclick="goTo('s-tax')"><div class="sbtn-num">7</div><div class="sbtn-text"><div class="sbtn-label">Tax Dashboard</div><div class="sbtn-desc">Period toggle · full ledger · IGR rank · receipts</div></div><span class="sbtn-new">REBUILT</span></button>
+    <button class="sbtn" id="btn-s-legal" onclick="goTo('s-legal')"><div class="sbtn-num">8</div><div class="sbtn-text"><div class="sbtn-label">Legal Rights</div><div class="sbtn-desc">AI legal engine · police/phone example</div></div><span class="sbtn-new">NEW</span></button>
+    <button class="sbtn" id="btn-s-budget" onclick="goTo('s-budget')"><div class="sbtn-num">9</div><div class="sbtn-text"><div class="sbtn-label">Budget Analysis</div><div class="sbtn-desc">Sector breakdown · global benchmarks</div></div><span class="sbtn-new">NEW</span></button>
+    <button class="sbtn" id="btn-s-game" onclick="goTo('s-game')"><div class="sbtn-num">10</div><div class="sbtn-text"><div class="sbtn-label">CivicIQ</div><div class="sbtn-desc">Game show teaser · topics · points tracker</div></div></button>
+    <button class="sbtn" id="btn-s-more" onclick="goTo('s-more')"><div class="sbtn-num">11</div><div class="sbtn-text"><div class="sbtn-label">More</div><div class="sbtn-desc">All features · History Bank · Visitor Mode</div></div></button>
+  </div>
+</div>
+
+<script>
+let cur='s-splash';
+const navMap={'s-home':0,'s-leaders':1,'s-elections':2,'s-report':3,'s-more':4};
+
+function goTo(id){
+  if(cur===id)return;
+  const prev=document.getElementById(cur);
+  const next=document.getElementById(id);
+  if(!next)return;
+  prev.classList.remove('active');prev.classList.add('exit');
+  setTimeout(()=>prev.classList.remove('exit'),320);
+  next.classList.add('active');
+  cur=id;
+  document.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('active'));
+  const sb=document.getElementById('btn-'+id);
+  if(sb)sb.classList.add('active');
+  const bnav=document.getElementById('bnav');
+  if(id==='s-splash'||id==='s-onboard'){bnav.style.display='none';}
+  else{
+    bnav.style.display='flex';
+    document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+    const ni=navMap[id];
+    if(ni!==undefined){document.querySelectorAll('.ni')[ni].classList.add('active');}
+    else{document.querySelectorAll('.ni')[4].classList.add('active');}
+  }
+  // scroll to top
+  next.scrollTop=0;
+}
+
+function navTo(id,el){
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+  goTo(id);
+}
+
+// Onboarding steps
+function obNext(step){
+  document.querySelectorAll('.ob-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('ob'+step).classList.add('active');
+  ['pip1','pip2','pip3'].forEach((p,i)=>{
+    const el=document.getElementById(p);
+    el.classList.remove('done','active');
+    if(i<step-1)el.classList.add('done');
+    else if(i===step-1)el.classList.add('active');
+  });
+}
+
+// Language toggle
+function toggleAllLangs(){
+  const chips=document.querySelectorAll('.lchip');
+  const allSel=[...chips].every(c=>c.classList.contains('sel'));
+  chips.forEach(c=>{allSel?c.classList.remove('sel'):c.classList.add('sel')});
+}
+
+// Push dismiss
+function dismissPush(){
+  const p=document.getElementById('push-notif');
+  if(p){p.style.animation='none';p.style.opacity='0';p.style.transform='translateY(-100%)';p.style.transition='all .3s';setTimeout(()=>p.remove(),300);}
+}
+setTimeout(()=>{const p=document.getElementById('push-notif');if(p)dismissPush();},6000);
+
+// Voice bar
+function toggleVoice(){
+  const v=document.getElementById('vbar');
+  v.classList.toggle('open');
+  document.getElementById('vbar-ph').textContent=v.classList.contains('open')?'"How much on roads in Eti-Osa this year?"':'Ask Citizen anything…';
+}
+
+// Leader tabs
+function switchLeaderTab(el,id){
+  document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.ltab-content').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+
+// Report submit / reset
+function submitReport(){
+  document.getElementById('rform').style.display='none';
+  document.getElementById('success-state').classList.add('show');
+}
+function resetReport(){
+  document.getElementById('rform').style.display='block';
+  document.getElementById('success-state').classList.remove('show');
+}
+
+// Star rating
+function rateStar(el,idx){
+  const row=el.parentElement;
+  const stars=[...row.querySelectorAll('.rm-star')];
+  stars.forEach((s,i)=>{s.classList.toggle('lit',i<=idx)});
+}
+
+// Quiz answer
+function markAnswer(el,correct){
+  document.querySelectorAll('.qopt').forEach(o=>{o.disabled=true;o.style.cursor='default'});
+  el.classList.add(correct?'correct':'wrong');
+  if(!correct)document.querySelectorAll('.qopt')[1].classList.add('correct');
+  document.getElementById('qresult').classList.add('show');
+}
+
+// Topic switch
+function switchTopic(el){
+  document.querySelectorAll('.tcat').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Tax period toggle
+const taxData={
+  'MTD':{label:'Total tax paid · March 2026',total:'₦57,300',paye:'₦51.2K',gig:'₦5.1K',vat:'₦1.0K'},
+  'YTD':{label:'Total tax paid · Jan–Mar 2026',total:'₦847,200',paye:'₦612K',gig:'₦185K',vat:'₦50K'},
+  'LY':{label:'Total tax paid · Full year 2025',total:'₦2,844,000',paye:'₦2.2M',gig:'₦524K',vat:'₦120K'},
+  'ALL':{label:'Total tax paid · All time (2019–2026)',total:'₦11,230,400',paye:'₦8.9M',gig:'₦1.8M',vat:'₦530K'}
+};
+function switchPeriod(el,key){
+  document.querySelectorAll('.tpt').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const d=taxData[key];
+  document.getElementById('tax-period-label').textContent=d.label;
+  document.getElementById('tax-total-val').textContent=d.total;
+  document.getElementById('ts-paye').textContent=d.paye;
+  document.getElementById('ts-gig').textContent=d.gig;
+  document.getElementById('ts-vat').textContent=d.vat;
+}
+
+// Budget year toggle
+const budgetData={
+  '2024':{val:'₦36.5 Trillion',change:'▲ 21.2% vs 2023 (₦30.1T)'},
+  '2025':{val:'₦47.9 Trillion',change:'▲ 31.4% vs 2024 (₦36.5T)'},
+  '2026':{val:'₦54.2 Trillion',change:'▲ 13.2% vs 2025 (₦47.9T)'}
+};
+function switchBudget(el,yr){
+  document.querySelectorAll('.byt').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('budget-val').textContent=budgetData[yr].val;
+  document.getElementById('budget-change').textContent=budgetData[yr].change;
+}
+
+// Receipt modal
+function openReceipt(){document.getElementById('receipt-modal').classList.add('open')}
+function closeReceipt(){document.getElementById('receipt-modal').classList.remove('open')}
+
+// Election countdown
+function updateCountdown(){
+  const d=Math.floor((new Date('2027-02-20')-new Date())/86400000);
+  const el1=document.getElementById('el-days');
+  const el2=document.getElementById('days-left');
+  if(el1)el1.textContent=d;
+  if(el2)el2.textContent=d;
+}
+updateCountdown();
+setInterval(updateCountdown,60000);
+</script>
+</body>
+</html>
